@@ -28,7 +28,7 @@ class Menu:
             button.draw(screen)
 
     def start_new_game(self):
-        self.game.start_new_game(10)  # Start with a 10x10 grid
+        self.game.start_new_game(10)
 
     def load_game(self):
         self.game.load_game()

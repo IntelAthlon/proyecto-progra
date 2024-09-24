@@ -25,7 +25,7 @@ class GameScreen:
             button.handle_event(event)
 
     def update(self):
-        pass  # The main update logic is now in the Game class
+        pass
 
     def draw(self, screen):
         screen.fill(WHITE)

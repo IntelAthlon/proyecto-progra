@@ -33,7 +33,7 @@ class Game:
         levels = []
         for _ in range(num_levels):
             difficulty = random.randint(DIFFICULTY_EASY, DIFFICULTY_HARD)
-            size = random.randint(5, 15)  # Adjust size range as needed
+            size = random.randint(5, 15)
             grid = generate_nonogram(size, size, difficulty)
             levels.append(grid)
         return levels
@@ -114,13 +114,13 @@ class Game:
     def draw(self):
         self.screen.fill(WHITE)
         if self.current_screen == 'game':
-            # Draw game screen
+
             pass
         elif self.current_screen == 'menu':
-            # Draw menu screen
+
             pass
         elif self.current_screen == 'editor':
-            # Draw editor screen
+
             pass
         pygame.display.flip()
 
@@ -138,11 +138,11 @@ class Game:
 
     def handle_event(self, event):
         if self.current_screen == 'game':
-            # Handle game screen events
+
             pass
         elif self.current_screen == 'menu':
-            # Handle menu screen events
+
             pass
         elif self.current_screen == 'editor':
-            # Handle editor screen events
+
             pass

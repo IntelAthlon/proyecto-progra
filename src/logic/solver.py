@@ -1,5 +1,3 @@
-import itertools
-
 
 def solve_nonogram(row_clues, col_clues):
     rows = len(row_clues)
