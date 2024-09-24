@@ -1,34 +1,13 @@
 import random
 
-def generate_nonogram(rows, cols):
-    grid = [[random.randint(0, 1) for _ in range(cols)] for _ in range(rows)]
-    row_clues = []
-    col_clues = []
 
-    for row in grid:
-        clue = []
-        count = 0
-        for cell in row:
-            if cell == 1:
-                count += 1
-            elif count > 0:
-                clue.append(count)
-                count = 0
-        if count > 0:
-            clue.append(count)
-        row_clues.append(clue if clue else [0])
+def generate_nonogram(rows, cols, difficulty):
+    grid = [[0 for _ in range(cols)] for _ in range(rows)]
+    fill_ratio = 0.3 + (difficulty * 0.1)  # Adjust fill ratio based on difficulty
+    for r in range(rows):
+        for c in range(cols):
+            if random.random() < fill_ratio:
+                grid[r][c] = 1
+    return grid
 
-    for col in zip(*grid):
-        clue = []
-        count = 0
-        for cell in col:
-            if cell == 1:
-                count += 1
-            elif count > 0:
-                clue.append(count)
-                count = 0
-        if count > 0:
-            clue.append(count)
-        col_clues.append(clue if clue else [0])
 
-    return grid, row_clues, col_clues

@@ -3,7 +3,7 @@ def get_hint(grid, row_clues, col_clues):
         for col in range(len(grid[0])):
             if grid[row][col] == 0:
                 if should_be_filled(grid, row, col, row_clues, col_clues):
-                    return row, col, 1  
+                    return row, col, 1
                 elif should_be_empty(grid, row, col, row_clues, col_clues):
                     return row, col, -1
     return None

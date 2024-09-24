@@ -32,11 +32,11 @@ AtomicGram/
 │   ├── saved_games/
 │   └── user_created/
 │
-├── tests/
+├── tests/ #falta implementar esta categoría
 │   ├── test_nonogram.py
 │   ├── test_generator.py
 │   └── test_solver.py
 │
 ├── README.md
-├── requirements.txt
+├── requirements.txt #falta actualizar
 └── setup.py

@@ -1,0 +1,32 @@
+# Game settings
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+FPS = 60
+
+# Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GRAY = (200, 200, 200)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+
+# Game difficulty levels
+DIFFICULTY_EASY = 0
+DIFFICULTY_MEDIUM = 1
+DIFFICULTY_HARD = 2
+
+# Grid settings
+MIN_GRID_SIZE = 5
+MAX_GRID_SIZE = 100
+DEFAULT_GRID_SIZE = 10
+
+# File paths
+SAVE_GAME_PATH = "saved_games/"
+CUSTOM_NONOGRAMS_PATH = "user_created/"
+
+# UI settings
+CELL_SIZE = 30
+GRID_OFFSET = (100, 100)
+BUTTON_WIDTH = 100
+BUTTON_HEIGHT = 50
