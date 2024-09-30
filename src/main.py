@@ -1,9 +1,14 @@
 import pygame
 import sys
+import os
 from game import Game
+from src.ui.level_select_screen import LevelSelectScreen
 from src.ui.menu import Menu
 from src.ui.game_screen import GameScreen
 from src.ui.editor_screen import EditorScreen
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, project_root)
 
 def main():
     pygame.init()
@@ -11,15 +16,22 @@ def main():
     pygame.display.set_caption("AtomicGram 1.0")
     clock = pygame.time.Clock()
 
+    os.chdir(project_root)
+    print(f"Running game from: {os.getcwd()}")
+
     game = Game(screen)
+    #game.run()
     menu = Menu(game)
     game_screen = GameScreen(game)
     editor_screen = EditorScreen(game)
+    level_select_screen = LevelSelectScreen(game)
 
     screens = {
         "menu": menu,
         "game": game_screen,
-        "editor": editor_screen
+        "editor": editor_screen,
+        "level_select": level_select_screen
+
     }
 
     while True:

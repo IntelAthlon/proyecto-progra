@@ -1,0 +1,23 @@
+{
+  "easy": {
+    "level1": false,
+    "level2": false,
+    "level3": false,
+    "level4": false,
+    "level5": false
+  },
+  "medium": {
+    "level1": false,
+    "level2": false,
+    "level3": false,
+    "level4": false,
+    "level5": false
+  },
+  "hard": {
+    "level1": false,
+    "level2": false,
+    "level3": false,
+    "level4": false,
+    "level5": false
+  }
+}

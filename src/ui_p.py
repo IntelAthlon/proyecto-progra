@@ -1,5 +1,10 @@
+from tkinter import filedialog
+
 import pygame
+
+
 from src.config import *
+
 
 
 class UI:
@@ -12,6 +17,17 @@ class UI:
         self.grid_offset = GRID_OFFSET
         self.selected_cell = None
         self.buttons = self.create_buttons()
+        self.grid = []
+        self.row_clues = []
+        self.col_clues = []
+
+
+
+    def set_grid(self, grid, row_clues, col_clues):
+        self.grid = grid
+        self.row_clues = row_clues
+        self.col_clues = col_clues
+        self.grid_size = len(grid)
 
     def load_fonts(self):
         pygame.font.init()
@@ -103,3 +119,74 @@ class UI:
 
     def return_to_menu(self):
         self.game.set_screen('menu')
+
+class UIManager:
+    CLUE_SIZE = 20
+    CELL_SIZE = 30
+    def __init__(self):
+        self.grid = None
+        self.row_clues = None
+        self.col_clues = None
+
+
+    def set_grid(self, grid, row_clues, col_clues):
+        self.grid = grid
+        self.row_clues = row_clues
+        self.col_clues = col_clues
+        self.draw_nonogram()
+
+    def draw_grid(self):
+        pass
+
+    #def set_grid(self, grid, row_clues, col_clues):
+     #   self.grid = grid
+      #  self.row_clues = row_clues
+       # self.col_clues = col_clues
+        #self.draw_grid()
+
+    def draw_nonogram(self):
+
+        if self.grid is None or self.row_clues is None or self.col_clues is None:
+            return
+
+        screen = self.game.screen
+        screen.fill((255, 255, 255))
+
+
+        rows = len(self.grid)
+        cols = len(self.grid[0])
+
+
+        for row_idx, clues in enumerate(self.row_clues):
+            clues_str = " ".join(map(str, clues))
+            text_surface = self.game.font.render(clues_str, True, (0, 0, 0))
+            screen.blit(text_surface, (self.CLUE_SIZE - 10, self.CLUE_SIZE + row_idx * self.CELL_SIZE))
+
+
+        for col_idx, clues in enumerate(self.col_clues):
+            clues_str = " ".join(map(str, clues))
+            text_surface = self.game.font.render(clues_str, True, (0, 0, 0))
+
+            rotated_surface = pygame.transform.rotate(text_surface, 90)
+            screen.blit(rotated_surface, (self.CLUE_SIZE + col_idx * self.CELL_SIZE, 0))
+
+
+        for row in range(rows):
+            for col in range(cols):
+
+                if self.grid[row][col] == 1:
+                    color = (0, 0, 0)
+                else:
+                    color = (255, 255, 255)
+
+
+                cell_x = self.CLUE_SIZE + col * self.CELL_SIZE
+                cell_y = self.CLUE_SIZE + row * self.CELL_SIZE
+
+
+                pygame.draw.rect(screen, color, (cell_x, cell_y, self.CELL_SIZE, self.CELL_SIZE))
+
+
+                pygame.draw.rect(screen, (0, 0, 0), (cell_x, cell_y, self.CELL_SIZE, self.CELL_SIZE), 1)
+
+        pygame.display.flip()

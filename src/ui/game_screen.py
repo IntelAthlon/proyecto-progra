@@ -1,10 +1,15 @@
+import os
+
 import pygame
+import json
 from src.ui.components import Button
 from src.config import *
+from src.nonogram import Nonogram
 
 class GameScreen:
     def __init__(self, game):
         self.game = game
+        self.nonogram = None
         self.buttons = [
             Button("Hint", 650, 100, BUTTON_WIDTH, BUTTON_HEIGHT, self.get_hint),
             Button("Undo", 650, 160, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.undo),
@@ -12,47 +17,131 @@ class GameScreen:
             Button("Save", 650, 280, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.save_game),
             Button("Menu", 650, 340, BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu)
         ]
+        self.load_player_progress()
+
+    def load_player_progress(self):
+        try:
+            with open("data/player_progress.json", "r") as f:
+                self.player_progress = json.load(f)
+        except FileNotFoundError:
+            self.player_progress = {
+                "easy": {},
+                "medium": {},
+                "hard": {}
+            }
+
+    def save_player_progress(self):
+        with open("data/player_progress.json", "w") as f:
+            json.dump(self.player_progress, f, indent=2)
+
+    def load_level_data(self, level_key):
+        file_path = os.path.join("data", "levels", f"{level_key}.json")
+        abs_file_path = os.path.abspath(file_path)
+
+        print(f"Attempting to load level file: {abs_file_path}")
+
+        if not os.path.exists(abs_file_path):
+            print(f"Error: Level file for {level_key} not found.")
+            return None
+
+        try:
+            with open(abs_file_path, "r") as f:
+                data = json.load(f)
+            print(f"Successfully loaded data for {level_key}")
+            return data
+        except json.JSONDecodeError:
+            print(f"Error: Invalid JSON in level file for {level_key}.")
+            return None
+        except Exception as e:
+            print(f"Unexpected error loading {level_key}: {str(e)}")
+            return None
+
+    def start_level(self, level_key):
+        level_data = self.load_level_data(level_key)
+        if level_data and all(key in level_data for key in ["grid", "row_clues", "col_clues"]):
+            print(f"Initializing Nonogram for level {level_key}")
+            print(f"Grid: {level_data['grid']}")
+            print(f"Row clues: {level_data['row_clues']}")
+            print(f"Column clues: {level_data['col_clues']}")
+            try:
+                self.nonogram = Nonogram(
+                    level_data["grid"],
+                    level_data["row_clues"],
+                    level_data["col_clues"]
+                )
+                self.game.nonogram = self.nonogram
+                print(f"Successfully initialized Nonogram for level {level_key}")
+            except Exception as e:
+                print(f"Error initializing Nonogram: {str(e)}")
+        else:
+            print(f"Error: Invalid or incomplete level data for {level_key}.")
+            if level_data:
+                print(f"Found keys: {level_data.keys()}")
+            else:
+                print("No data loaded.")
 
     def handle_event(self, event):
+        if self.nonogram is None:
+            print("Error: Nonogram not initialized in GameScreen.")
+            print(f"self.nonogram: {self.nonogram}")
+            print(f"self.game.nonogram: {self.game.nonogram}")
+            return
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = event.pos
-            grid_x = (x - GRID_OFFSET[0]) // CELL_SIZE
-            grid_y = (y - GRID_OFFSET[1]) // CELL_SIZE
-            if 0 <= grid_x < self.game.nonogram.cols and 0 <= grid_y < self.game.nonogram.rows:
-                self.game.nonogram.toggle_cell(grid_y, grid_x)
+            grid_x = (x - self.nonogram.grid_offset[0]) // self.nonogram.cell_size
+            grid_y = (y - self.nonogram.grid_offset[1]) // self.nonogram.cell_size
+            if 0 <= grid_x < self.nonogram.cols and 0 <= grid_y < self.nonogram.rows:
+                self.nonogram.toggle_cell(grid_y, grid_x)
 
         for button in self.buttons:
             button.handle_event(event)
 
     def update(self):
-        pass
+        if self.nonogram is not None and self.nonogram.is_solved():
+            self.update_player_progress()
+
+    def update_player_progress(self):
+        level_key = f"level{self.game.current_level}"
+        difficulty = self.get_level_difficulty()
+        self.player_progress[difficulty][level_key] = True
+        self.save_player_progress()
+
+
+    def get_level_difficulty(self):
+        # You can implement your own logic to determine the difficulty based on the level number
+        if self.game.current_level <= 20:
+            return "easy"
+        elif self.game.current_level <= 40:
+            return "medium"
+        else:
+            return "hard"
 
     def draw(self, screen):
         screen.fill(WHITE)
-        self.draw_grid(screen)
-        self.draw_clues(screen)
-        self.draw_timer(screen)
+        if self.nonogram is not None:
+            self.draw_grid(screen)
+            self.draw_clues(screen)
+            self.draw_timer(screen)
+        else:
+            font = pygame.font.Font(None, 36)
+            message = font.render("No level loaded.", True, (255, 0, 0))
+            screen.blit(message, (300, 300))
+
         for button in self.buttons:
             button.draw(screen)
 
     def draw_grid(self, screen):
-        for row in range(self.game.nonogram.rows):
-            for col in range(self.game.nonogram.cols):
-                x = GRID_OFFSET[0] + col * CELL_SIZE
-                y = GRID_OFFSET[1] + row * CELL_SIZE
-                rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
-                pygame.draw.rect(screen, BLACK, rect, 1)
-                if self.game.nonogram.player_grid[row][col] == 1:
-                    pygame.draw.rect(screen, BLACK, rect)
+        self.nonogram.draw_grid(screen)
 
     def draw_clues(self, screen):
         font = pygame.font.Font(None, 24)
-        for i, row_clue in enumerate(self.game.nonogram.row_clues):
+        for i, row_clue in enumerate(self.nonogram.row_clues):
             text = " ".join(map(str, row_clue))
             rendered = font.render(text, True, BLACK)
             screen.blit(rendered, (GRID_OFFSET[0] - 80, GRID_OFFSET[1] + i * CELL_SIZE + 5))
 
-        for i, col_clue in enumerate(self.game.nonogram.col_clues):
+        for i, col_clue in enumerate(self.nonogram.col_clues):
             text = "\n".join(map(str, col_clue))
             rendered = font.render(text, True, BLACK)
             screen.blit(rendered, (GRID_OFFSET[0] + i * CELL_SIZE + 5, GRID_OFFSET[1] - 80))
@@ -67,7 +156,7 @@ class GameScreen:
         hint = self.game.get_hint()
         if hint:
             row, col, value = hint
-            self.game.nonogram.player_grid[row][col] = value
+            self.nonogram.player_grid[row][col] = value
 
     def return_to_menu(self):
         self.game.set_screen('menu')

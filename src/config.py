@@ -19,7 +19,7 @@ DIFFICULTY_HARD = 2
 #Grid settings
 MIN_GRID_SIZE = 5
 MAX_GRID_SIZE = 100
-DEFAULT_GRID_SIZE = 10
+DEFAULT_GRID_SIZE = 15
 
 
 SAVE_GAME_PATH = "saved_games/"
@@ -30,3 +30,22 @@ CELL_SIZE = 30
 GRID_OFFSET = (100, 100)
 BUTTON_WIDTH = 100
 BUTTON_HEIGHT = 50
+
+class Settings:
+    def __init__(self):
+        self.color_theme = "default"
+        self.grid_size = "medium"
+        self.sound_volume = 0.7
+        self.music_volume = 0.5
+
+    def change_color_theme(self, theme):
+        self.color_theme = theme
+
+    def change_grid_size(self, size):
+        self.grid_size = size
+
+    def change_sound_volume(self, volume):
+        self.sound_volume = volume
+
+    def change_music_volume(self, volume):
+        self.music_volume = volume
