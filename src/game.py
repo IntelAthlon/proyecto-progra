@@ -1,6 +1,7 @@
 import itertools
 import pygame
 import json
+import os
 from src.ui_p import UIManager
 from src.logic.progress import ProgressTracker
 from src.config import *
@@ -33,8 +34,8 @@ class Game:
         self.current_level_key = None
 
     def load_levels(self):
-        #with open("data/levels/nonogram_levels.json", "r") as f:
-        with open("C:/Users/carlo/Desktop\proyecto progra\proyecto-progra\src\levels/nonogram_levels.json", "r") as f:
+        levels_path = os.path.join("levels/nonogram_levels.json")
+        with open(levels_path, "r") as f:
             return json.load(f)
 
     def initialize_screens(self):
@@ -53,11 +54,15 @@ class Game:
 
     def start_level(self, level_key):
         print(f"Game: Starting level {level_key}")
-        self.game_screen.start_level(level_key)
-        self.set_screen('game')
-        print(f"Game: Current screen set to 'game'")
-        print(f"Game: self.nonogram = {self.nonogram}")
-
+        level_data = self.levels.get(level_key)
+        if level_data:
+            self.nonogram = Nonogram.from_level_data(level_data)
+            self.game_screen.nonogram = self.nonogram
+            self.set_screen('game')
+            print(f"Game: Current screen set to 'game'")
+            print(f"Game: self.nonogram = {self.nonogram}")
+        else:
+            print(f"Error: Level data not found for {level_key}")
 
     def get_hint(self):
         return self.nonogram.get_hint() if self.nonogram else None
@@ -69,10 +74,10 @@ class Game:
     def redo(self):
         if self.nonogram:
             self.nonogram.redo()
-
-    def save_game(self):
-        # Implement save game logic here
-        pass
+    n=0
+    def save_game(grid, filename="data/saved_games/save" + str(n) + ".json"):
+        with open(filename, 'w') as f:
+            json.dump(grid, f)
 
     def update(self):
         if self.current_screen == 'game':
@@ -111,3 +116,7 @@ class Game:
     def solve(self):
         if self.nonogram:
             solve_nonogram(self.nonogram)
+
+    def load_game(filename="data/saved_games/save1.json"):
+        with open(filename, 'r') as f:
+            return json.load(f)

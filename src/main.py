@@ -7,17 +7,12 @@ from src.ui.menu import Menu
 from src.ui.game_screen import GameScreen
 from src.ui.editor_screen import EditorScreen
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.insert(0, project_root)
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption("AtomicGram 1.0")
     clock = pygame.time.Clock()
-
-    os.chdir(project_root)
-    print(f"Running game from: {os.getcwd()}")
 
     game = Game(screen)
     #game.run()

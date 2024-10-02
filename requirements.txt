@@ -1,1 +1,4 @@
 pygame
+
+numpy~=2.0.1
+pillow~=10.4.0
