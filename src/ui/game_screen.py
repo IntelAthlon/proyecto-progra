@@ -33,3 +33,4 @@ class GameScreen:
     def save_player_progress(self):
         with open("data/player_progress.json", "w") as f:
             json.dump(self.player_progress, f, indent=2)
+

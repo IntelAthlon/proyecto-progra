@@ -1,4 +1,4 @@
-import time
+import timer
 
 class Timer:
     def __init__(self):
