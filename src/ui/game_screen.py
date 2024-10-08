@@ -106,3 +106,47 @@ class GameScreen:
         difficulty = self.get_level_difficulty()
         self.player_progress[difficulty][level_key] = True
         self.save_player_progress()
+
+    def get_level_difficulty(self):
+        if self.game.current_level <= 20:
+            return "easy"
+        elif self.game.current_level <= 40:
+            return "medium"
+        else:
+            return "hard"
+
+    def draw(self, screen):
+        screen.fill(WHITE)
+        if self.nonogram is not None:
+            self.draw_grid(screen)
+            self.draw_clues(screen)
+            self.draw_timer(screen)
+        else:
+            font = pygame.font.Font(None, 36)
+            message = font.render("No se cargó nivel.", True, (255, 0, 0))
+            screen.blit(message, (300, 300))
+
+        for button in self.buttons:
+            button.draw(screen)
+
+    def draw_grid(self, screen):
+        self.nonogram.draw_grid(screen)
+
+    def draw_clues(self, screen):
+        font = pygame.font.Font(None, 24)
+        for i, row_clue in enumerate(self.nonogram.row_clues):
+            text = " ".join(map(str, row_clue))
+            rendered = font.render(text, True, BLACK)
+            screen.blit(rendered, (GRID_OFFSET[0] - 80, GRID_OFFSET[1] + i * CELL_SIZE + 5))
+
+        for i, col_clue in enumerate(self.nonogram.col_clues):
+            text = "\n".join(map(str, col_clue))
+            rendered = font.render(text, True, BLACK)
+            screen.blit(rendered, (GRID_OFFSET[0] + i * CELL_SIZE + 5, GRID_OFFSET[1] - 80))
+
+    def draw_timer(self, screen):
+        font = pygame.font.Font(None, 36)
+        timer_text = f"Time: {self.game.timer.get_time():.1f}s"
+        rendered = font.render(timer_text, True, BLACK)
+        screen.blit(rendered, (650, 50))
+
