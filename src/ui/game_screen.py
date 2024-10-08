@@ -150,3 +150,12 @@ class GameScreen:
         rendered = font.render(timer_text, True, BLACK)
         screen.blit(rendered, (650, 50))
 
+    def get_hint(self):
+        hint = self.game.get_hint()
+        if hint:
+            row, col, value = hint
+            self.nonogram.player_grid[row][col] = value
+
+    def return_to_menu(self):
+        self.game.set_screen('menu')
+
