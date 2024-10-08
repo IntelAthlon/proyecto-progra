@@ -80,3 +80,29 @@ class GameScreen:
             else:
                 print("No se cargó información.")
 
+    def handle_event(self, event):
+        if self.nonogram is None:
+            print("Error: Nonograma no inicializado.")
+            print(f"self.nonogram: {self.nonogram}")
+            print(f"self.game.nonogram: {self.game.nonogram}")
+            return
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            x, y = event.pos
+            grid_x = (x - self.nonogram.grid_offset[0]) // self.nonogram.cell_size
+            grid_y = (y - self.nonogram.grid_offset[1]) // self.nonogram.cell_size
+            if 0 <= grid_x < self.nonogram.cols and 0 <= grid_y < self.nonogram.rows:
+                self.nonogram.toggle_cell(grid_y, grid_x)
+
+        for button in self.buttons:
+            button.handle_event(event)
+
+    def update(self):
+        if self.nonogram is not None and self.nonogram.is_solved():
+            self.update_player_progress()
+
+    def update_player_progress(self):
+        level_key = f"level{self.game.current_level}"
+        difficulty = self.get_level_difficulty()
+        self.player_progress[difficulty][level_key] = True
+        self.save_player_progress()
