@@ -24,18 +24,19 @@ class GameScreen:
             with open("data/player_progress.json", "r") as f:
                 self.player_progress = json.load(f)
         except FileNotFoundError:
-            self.player_progress = {
-                "easy": {},
-                "medium": {},
-                "hard": {}
-            }
+            print(f"Error: File not found")
+         #   self.player_progress = {
+          #      "easy": {},
+           #     "medium": {},
+            #    "hard": {}
+            #}
 
     def save_player_progress(self):
         with open("data/player_progress.json", "w") as f:
             json.dump(self.player_progress, f, indent=2)
 
     def load_level_data(self, level_key):
-        file_path = os.path.join("data", "levels", f"{level_key}.json")
+        file_path = os.path.join("data", "levels", f"nonogram_levels.json")
         abs_file_path = os.path.abspath(file_path)
 
         print(f"Attempting to load level file: {abs_file_path}")
@@ -102,7 +103,7 @@ class GameScreen:
             self.update_player_progress()
 
     def update_player_progress(self):
-        level_key = f"level{self.game.current_level}"
+        level_key = f"{self.game.current_level}"
         difficulty = self.get_level_difficulty()
         self.player_progress[difficulty][level_key] = True
         self.save_player_progress()

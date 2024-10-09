@@ -15,12 +15,13 @@ from src.ui.game_screen import GameScreen
 from src.ui.level_select_screen import LevelSelectScreen
 
 
+
 class Game:
     def __init__(self, screen):
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.timer = Timer()
-        self.current_level = 0
+        self.current_level = "level1"
         self.current_screen = 'menu'
         self.ui_manager = UIManager()
         self.progress_tracker = ProgressTracker()
@@ -54,7 +55,8 @@ class Game:
 
     def start_level(self, level_key):
         print(f"Game: Starting level {level_key}")
-        level_data = self.levels.get(level_key)
+        #level_data = self.levels.get(level_key)
+        level_data = self.game_screen.load_level_data(level_key)
         if level_data:
             self.nonogram = Nonogram.from_level_data(level_data)
             self.game_screen.nonogram = self.nonogram
