@@ -35,7 +35,7 @@ class Game:
         self.current_level_key = None
 
     def load_levels(self):
-        levels_path = os.path.join("levels/nonogram_levels.json")
+        levels_path = os.path.join("data/levels/nonogram_levels.json")
         with open(levels_path, "r") as f:
             return json.load(f)
 
