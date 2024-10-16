@@ -28,11 +28,14 @@ class Game:
         self.gamepad_handler = GamepadHandler()
         self.sound_manager = SoundManager()
         self.levels = self.load_levels()
-        self.nonogram = None
         self.game_screen = None
         self.level_select_screen = None
         self.initialize_screens()
         self.current_level_key = None
+        try:
+            _ = self.nonogram
+        except AttributeError:
+            self.nonogram = None
 
     def load_levels(self):
         levels_path = os.path.join("data/levels/nonogram_levels.json")
@@ -42,6 +45,53 @@ class Game:
     def initialize_screens(self):
         self.game_screen = GameScreen(self)
         self.level_select_screen = LevelSelectScreen(self)
+
+    def load_level_data(self, level_key):
+        file_path = os.path.join("data", "levels", f"{level_key}.json")
+        abs_file_path = os.path.abspath(file_path)
+
+        print(f"Attempting to load level file: {abs_file_path}")
+
+        if not os.path.exists(abs_file_path):
+            print(f"Error: Level file for {level_key} not found.")
+            return None
+
+        try:
+            with open(abs_file_path, "r") as f:
+                data = json.load(f)
+            print(f"Successfully loaded data for {level_key}")
+            return data
+        except json.JSONDecodeError:
+            print(f"Error: Invalid JSON in level file for {level_key}.")
+            return None
+        except Exception as e:
+            print(f"Unexpected error loading {level_key}: {str(e)}")
+            return None
+
+    def def_nono(self, level_key):
+        level_data = self.load_level_data(level_key)
+        if level_data and all(key in level_data for key in ["grid", "row_clues", "col_clues"]):
+            print(f"Inicializando Nonograma del nivel {level_key}")
+            print(f"Grilla: {level_data['grid']}")
+            print(f"Pistas por fila: {level_data['row_clues']}")
+            print(f"Pistas por columna: {level_data['col_clues']}")
+            try:
+                self.nonogram = Nonogram(
+                    level_data["grid"],
+                    level_data["row_clues"],
+                    level_data["col_clues"]
+                )
+                print(f"Nonograma de nivel {level_key} inicializado con éxito.")
+                print(self.nonogram)
+            except Exception as e:
+                print(f"Error inicializando Nonograma: {str(e)}")
+        else:
+            print(f"Error: Información del nivel {level_key} incompleta o inválida.")
+            if level_data:
+                print(f"Se encontraron las claves: {level_data.keys()}")
+            else:
+                print("No se cargó información.")
+
 
     def set_screen(self, screen_name):
         self.current_screen = screen_name
@@ -56,15 +106,9 @@ class Game:
     def start_level(self, level_key):
         print(f"Game: Starting level {level_key}")
         #level_data = self.levels.get(level_key)
-        level_data = self.game_screen.load_level_data(level_key)
-        if level_data:
-            self.nonogram = Nonogram.from_level_data(level_data)
-            self.game_screen.nonogram = self.nonogram
-            self.set_screen('game')
-            print(f"Game: Current screen set to 'game'")
-            print(f"Game: self.nonogram = {self.nonogram}")
-        else:
-            print(f"Error: Level data not found for {level_key}")
+        self.def_nono(level_key)
+        self.set_screen('game')
+        print(f"Game: Current screen set to 'game'")
 
     def get_hint(self):
         return self.nonogram.get_hint() if self.nonogram else None
