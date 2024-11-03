@@ -65,40 +65,37 @@ class Nonogram:
                     self.cell_size,
                     self.cell_size
                 )
-                if self.grid[i][j] == 1:
+                if self.player_grid[i][j] == 1:
                     pygame.draw.rect(screen, (0, 0, 0), cell_rect)
-                elif self.grid[i][j] == 2:
+                elif self.player_grid[i][j] == 2:
                     pygame.draw.line(screen, (255, 0, 0), cell_rect.topleft, cell_rect.bottomright, 2)
                     pygame.draw.line(screen, (255, 0, 0), cell_rect.topright, cell_rect.bottomleft, 2)
 
     def toggle_cell(self, row, col):
-        self.history.append((row, col, self.grid[row][col]))
-        self.grid[row][col] = (self.grid[row][col] + 1) % 3
+        self.history.append((row, col, self.player_grid[row][col]))
+        self.player_grid[row][col] = (self.player_grid[row][col] + 1) % 3
         self.redo_stack.clear()
 
     def undo(self):
         if self.history:
             row, col, previous_state = self.history.pop()
-            self.redo_stack.append((row, col, self.grid[row][col]))
-            self.grid[row][col] = previous_state
+            self.redo_stack.append((row, col, self.player_grid[row][col]))
+            self.player_grid[row][col] = previous_state
 
     def redo(self):
         if self.redo_stack:
             row, col, next_state = self.redo_stack.pop()
-            self.history.append((row, col, self.grid[row][col]))
-            self.grid[row][col] = next_state
+            self.history.append((row, col, self.player_grid[row][col]))
+            self.player_grid[row][col] = next_state
 
     def is_solved(self):
-        for i, row in enumerate(self.grid):
-            if self.get_row_clue(row) != self.row_clues[i]:
-                return False
+        playergrid_copy = self.player_grid
 
-        for j in range(self.cols):
-            col = [self.grid[i][j] for i in range(self.rows)]
-            if self.get_row_clue(col) != self.col_clues[j]:
-                return False
-
-        return True
+        for l in playergrid_copy:
+            for i in range(len(l)):
+                if l[i] == 2:
+                    playergrid_copy[l][i] = 0
+        return playergrid_copy == self.grid
 
     @staticmethod
     def get_row_clue(row):
@@ -112,4 +109,4 @@ class Nonogram:
                 count = 0
         if count > 0:
             clue.append(count)
-        return clue if clue else [0]
+        return clue if clue else None
