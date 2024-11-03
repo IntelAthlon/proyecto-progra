@@ -9,7 +9,6 @@ from src.nonogram import Nonogram
 class GameScreen:
     def __init__(self, game):
         self.game = game
-        self.nonogram = None
 
         self.buttons = [
             Button("Hint", 650, 100, BUTTON_WIDTH, BUTTON_HEIGHT, self.get_hint),
@@ -36,25 +35,26 @@ class GameScreen:
             json.dump(self.player_progress, f, indent=2)
 
     def handle_event(self, event):
-        self.nonogram=self.game.nonogram
 
-        if self.nonogram is None:
+        if self.game.nonogram is None:
             print("Error: Nonograma no inicializado.")
-            print(f"self.nonogram: {self.nonogram}")
+            print(f"self.game.nonogram: {self.game.nonogram}")
             return
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = event.pos
-            grid_x = (x - self.nonogram.grid_offset[0]) // self.nonogram.cell_size
-            grid_y = (y - self.nonogram.grid_offset[1]) // self.nonogram.cell_size
-            if 0 <= grid_x < self.nonogram.cols and 0 <= grid_y < self.nonogram.rows:
-                self.nonogram.toggle_cell(grid_y, grid_x)
+            grid_x = (x - self.game.nonogram.grid_offset[0]) // self.game.nonogram.cell_size
+            grid_y = (y - self.game.nonogram.grid_offset[1]) // self.game.nonogram.cell_size
+            if 0 <= grid_x < self.game.nonogram.cols and 0 <= grid_y < self.game.nonogram.rows:
+                self.game.nonogram.toggle_cell(grid_y, grid_x)
+            self.game.draw()
+            self.game.update()
 
         for button in self.buttons:
             button.handle_event(event)
 
     def update(self):
-        if self.nonogram is not None and self.nonogram.is_solved():
+        if self.game.nonogram is not None and self.game.nonogram.is_solved():
             self.update_player_progress()
 
 
@@ -74,8 +74,9 @@ class GameScreen:
 
     def draw(self, screen):
         screen.fill(WHITE)
-        if self.nonogram is not None:
-            self.draw_grid(screen)
+        if self.game.nonogram is not None:
+            self.game.nonogram.draw_grid(screen)
+            self.game.nonogram.draw_cells(screen)
             self.draw_clues(screen)
             self.draw_timer(screen)
         else:
@@ -86,17 +87,14 @@ class GameScreen:
         for button in self.buttons:
             button.draw(screen)
 
-    def draw_grid(self, screen):
-        self.nonogram.draw_grid(screen)
-
     def draw_clues(self, screen):
         font = pygame.font.Font(None, 24)
-        for i, row_clue in enumerate(self.nonogram.row_clues):
+        for i, row_clue in enumerate(self.game.nonogram.row_clues):
             text = " ".join(map(str, row_clue))
             rendered = font.render(text, True, BLACK)
             screen.blit(rendered, (GRID_OFFSET[0] - 80, GRID_OFFSET[1] + i * CELL_SIZE + 5))
 
-        for i, col_clue in enumerate(self.nonogram.col_clues):
+        for i, col_clue in enumerate(self.game.nonogram.col_clues):
             text = "\n".join(map(str, col_clue))
             rendered = font.render(text, True, BLACK)
             screen.blit(rendered, (GRID_OFFSET[0] + i * CELL_SIZE + 5, GRID_OFFSET[1] - 80))
@@ -111,7 +109,7 @@ class GameScreen:
         hint = self.game.get_hint()
         if hint:
             row, col, value = hint
-            self.nonogram.player_grid[row][col] = value
+            self.game.nonogram.player_grid[row][col] = value
 
     def return_to_menu(self):
         self.game.set_screen('menu')
