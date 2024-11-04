@@ -68,7 +68,7 @@ class Game:
         level_data = self.load_level_data(level_key)
         if level_data and all(key in level_data for key in ["grid", "row_clues", "col_clues"]):
             print(f"Inicializando Nonograma del nivel {level_key}")
-            print(f"Grilla: {level_data['grid']}")
+            #print(f"Grilla: {level_data['grid']}")
             print(f"Pistas por fila: {level_data['row_clues']}")
             print(f"Pistas por columna: {level_data['col_clues']}")
             try:
@@ -78,7 +78,6 @@ class Game:
                     level_data["col_clues"]
                 )
                 print(f"Nonograma de nivel {level_key} inicializado con éxito.")
-                print(self.nonogram)
                 self.current_level = level_key
             except Exception as e:
                 print(f"Error inicializando Nonograma: {str(e)}")
