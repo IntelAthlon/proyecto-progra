@@ -15,7 +15,8 @@ class GameScreen:
             Button("Undo", 650, 160, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.undo),
             Button("Redo", 650, 220, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.redo),
             Button("Save", 650, 280, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.save_game),
-            Button("Menu", 650, 340, BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu)
+            Button("Load", 650, 340, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.load_game),
+            Button("Menu", 650, 400, BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu)
         ]
         self.load_player_progress()
 
