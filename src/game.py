@@ -120,10 +120,11 @@ class Game:
     def redo(self):
         if self.nonogram:
             self.nonogram.redo()
-    n=0
-    def save_game(grid, filename="data/saved_games/save" + str(n) + ".json"):
+
+    def save_game(self):
+        filename="data/saved_games/" + str(self.current_level) + ".json"
         with open(filename, 'w') as f:
-            json.dump(grid, f)
+            json.dump(self.nonogram.player_grid, f)
 
     def update(self):
         if self.current_screen == 'game':
@@ -162,7 +163,3 @@ class Game:
     def solve(self):
         if self.nonogram:
             solve_nonogram(self.nonogram)
-
-    def load_game(filename="data/saved_games/save1.json"):
-        with open(filename, 'r') as f:
-            return json.load(f)
