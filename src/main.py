@@ -10,7 +10,7 @@ from src.ui.editor_screen import EditorScreen
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((800, 600))
+    screen = pygame.display.set_mode((900, 750))
     pygame.display.set_caption("AtomicGram 1.0")
     clock = pygame.time.Clock()
 

@@ -11,12 +11,12 @@ class GameScreen:
         self.game = game
 
         self.buttons = [
-            Button("Hint", 650, 100, BUTTON_WIDTH, BUTTON_HEIGHT, self.get_hint),
-            Button("Undo", 650, 160, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.undo),
-            Button("Redo", 650, 220, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.redo),
-            Button("Save", 650, 280, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.save_game),
-            Button("Load", 650, 340, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.load_game),
-            Button("Menu", 650, 400, BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu)
+            Button("Hint", 750, 100, BUTTON_WIDTH, BUTTON_HEIGHT, self.get_hint),
+            Button("Undo", 750, 160, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.undo),
+            Button("Redo", 750, 220, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.redo),
+            Button("Save", 750, 280, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.save_game),
+            Button("Load", 750, 340, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.load_game),
+            Button("Menu", 750, 400, BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu)
         ]
         self.load_player_progress()
 
