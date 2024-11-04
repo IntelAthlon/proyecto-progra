@@ -8,6 +8,7 @@ class Timer:
 
     def start(self):
         if not self.is_running:
+            self.total_time = 0
             self.start_time = time.time()
             self.is_running = True
 
