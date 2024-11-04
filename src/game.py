@@ -139,7 +139,6 @@ class Game:
             if self.nonogram and self.nonogram.is_solved():
                 self.sound_manager.play_sound("complete")
                 self.progress_tracker.mark_level_complete(2,self.current_level)
-                self.set_screen('level_select')
         elif self.current_screen == 'level_select':
             self.level_select_screen.update()
 
