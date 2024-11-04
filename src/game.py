@@ -21,7 +21,7 @@ class Game:
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.timer = Timer()
-        self.current_level = "level1"
+        self.current_level = None
         self.current_screen = 'menu'
         self.ui_manager = UIManager()
         self.progress_tracker = ProgressTracker()
@@ -31,7 +31,6 @@ class Game:
         self.game_screen = None
         self.level_select_screen = None
         self.initialize_screens()
-        self.current_level_key = None
         try:
             _ = self.nonogram
         except AttributeError:
@@ -83,6 +82,7 @@ class Game:
                 )
                 print(f"Nonograma de nivel {level_key} inicializado con éxito.")
                 print(self.nonogram)
+                self.current_level = level_key
             except Exception as e:
                 print(f"Error inicializando Nonograma: {str(e)}")
         else:
