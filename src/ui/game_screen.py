@@ -107,7 +107,7 @@ class GameScreen:
         font = pygame.font.Font(None, 36)
         timer_text = f"Time: {self.game.timer.get_time():.1f}s"
         rendered = font.render(timer_text, True, BLACK)
-        screen.blit(rendered, (650, 50))
+        screen.blit(rendered, (750, 50))
 
     def get_hint(self):
         hint = self.game.get_hint()
