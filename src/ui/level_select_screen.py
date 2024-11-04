@@ -14,7 +14,7 @@ class LevelSelectScreen:
             col = i % 10
             x = 100 + col * 60
             y = 100 + row * 60
-            self.buttons.append(Button(level_key, x, y, 50, 50, lambda lk=level_key: self.select_level(lk), self.game.sound_manager))
+            self.buttons.append(Button(str(i+1), x, y, 50, 50, lambda lk=level_key: self.select_level(lk), self.game.sound_manager))
 
     def handle_event(self, event):
         for button in self.buttons:

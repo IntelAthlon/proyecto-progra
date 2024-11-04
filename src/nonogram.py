@@ -1,5 +1,6 @@
 import pygame
 import json
+import copy
 
 class Nonogram:
     def __init__(self, grid, row_clues, col_clues):
@@ -89,11 +90,11 @@ class Nonogram:
             self.player_grid[row][col] = next_state
 
     def is_solved(self):
-        playergrid_copy = self.player_grid
+        playergrid_copy = copy.deepcopy(self.player_grid)
 
-        for l in playergrid_copy:
-            for i in range(len(l)):
-                if l[i] == 2:
+        for l in range(self.rows):
+            for i in range(self.cols):
+                if playergrid_copy[l][i] == 2:
                     playergrid_copy[l][i] = 0
         return playergrid_copy == self.grid
 
