@@ -125,10 +125,13 @@ class Game:
 
     def load_game(self):
         filename = "data/saved_games/" + str(self.current_level) + ".json"
-        with open(filename, 'r') as f:
-            self.nonogram.player_grid = json.load(f)
-            self.draw()
-            self.update()
+        try:
+            with open(filename, 'r') as f:
+                self.nonogram.player_grid = json.load(f)
+                self.draw()
+                self.update()
+        except FileNotFoundError:
+            return
 
     def update(self):
         if self.current_screen == 'game':
