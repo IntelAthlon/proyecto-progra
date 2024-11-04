@@ -101,7 +101,7 @@ class GameScreen:
                 text = str(j)
                 rendered = font.render(text, True, BLACK)
                 screen.blit(rendered, (GRID_OFFSET[0] + i * CELL_SIZE + 5, GRID_OFFSET[1] - 80 + offset_col))
-                offset_col += CELL_SIZE/2
+                offset_col += CELL_SIZE / 2
 
     def draw_timer(self, screen):
         font = pygame.font.Font(None, 36)
