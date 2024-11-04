@@ -2,15 +2,15 @@ import pygame
 import sys
 import os
 from game import Game
+from src.config import *
 from src.ui.level_select_screen import LevelSelectScreen
 from src.ui.menu import Menu
 from src.ui.game_screen import GameScreen
 from src.ui.editor_screen import EditorScreen
 
-
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((900, 750))
+    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption("AtomicGram 1.0")
     clock = pygame.time.Clock()
 
