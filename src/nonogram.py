@@ -98,6 +98,13 @@ class Nonogram:
                     playergrid_copy[l][i] = 0
         return playergrid_copy == self.grid
 
+    def get_hint(self):
+        for row in range(self.rows):
+            for col in range(self.cols):
+                if self.player_grid[row][col] != self.grid[row][col]:
+                    return row, col, self.grid[row][col]
+        return None
+
     @staticmethod
     def get_row_clue(row):
         clue = []
