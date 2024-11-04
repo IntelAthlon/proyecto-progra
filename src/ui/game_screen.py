@@ -15,7 +15,8 @@ class GameScreen:
             Button("Undo", 650, 160, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.undo),
             Button("Redo", 650, 220, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.redo),
             Button("Save", 650, 280, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.save_game),
-            Button("Menu", 650, 340, BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu)
+            Button("Load", 650, 340, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.load_game),
+            Button("Menu", 650, 400, BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu)
         ]
         self.load_player_progress()
 
@@ -95,9 +96,12 @@ class GameScreen:
             screen.blit(rendered, (GRID_OFFSET[0] - 80, GRID_OFFSET[1] + i * CELL_SIZE + 5))
 
         for i, col_clue in enumerate(self.game.nonogram.col_clues):
-            text = "\n".join(map(str, col_clue))
-            rendered = font.render(text, True, BLACK)
-            screen.blit(rendered, (GRID_OFFSET[0] + i * CELL_SIZE + 5, GRID_OFFSET[1] - 80))
+            offset_col = 0
+            for j in col_clue:
+                text = str(j)
+                rendered = font.render(text, True, BLACK)
+                screen.blit(rendered, (GRID_OFFSET[0] + i * CELL_SIZE + 5, GRID_OFFSET[1] - 80 + offset_col))
+                offset_col += CELL_SIZE/2
 
     def draw_timer(self, screen):
         font = pygame.font.Font(None, 36)

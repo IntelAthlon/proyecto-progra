@@ -126,6 +126,13 @@ class Game:
         with open(filename, 'w') as f:
             json.dump(self.nonogram.player_grid, f)
 
+    def load_game(self):
+        filename = "data/saved_games/" + str(self.current_level) + ".json"
+        with open(filename, 'r') as f:
+            self.nonogram.player_grid = json.load(f)
+            self.draw()
+            self.update()
+
     def update(self):
         if self.current_screen == 'game':
             self.game_screen.update()
