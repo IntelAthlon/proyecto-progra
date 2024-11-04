@@ -2,11 +2,9 @@ import itertools
 import pygame
 import json
 import os
-from src.ui_p import UIManager
 from src.logic.progress import ProgressTracker
 from src.config import *
 from src.logic.generator import generate_nonogram
-from src.logic.solver import solve_nonogram
 from src.nonogram import Nonogram
 from src.utils.timer import Timer
 from src.logic.gamepad_handler import GamepadHandler
@@ -23,7 +21,6 @@ class Game:
         self.timer = Timer()
         self.current_level = None
         self.current_screen = 'menu'
-        self.ui_manager = UIManager()
         self.progress_tracker = ProgressTracker()
         self.gamepad_handler = GamepadHandler()
         self.sound_manager = SoundManager()
@@ -138,6 +135,7 @@ class Game:
             self.game_screen.update()
             if self.nonogram and self.nonogram.is_solved():
                 self.sound_manager.play_sound("complete")
+                self.timer.stop()
                 self.progress_tracker.mark_level_complete(2,self.current_level)
         elif self.current_screen == 'level_select':
             self.level_select_screen.update()
@@ -165,7 +163,3 @@ class Game:
                 self.handle_event(event)
             self.update()
             self.draw()
-
-    def solve(self):
-        if self.nonogram:
-            solve_nonogram(self.nonogram)
