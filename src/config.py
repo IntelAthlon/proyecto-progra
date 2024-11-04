@@ -1,6 +1,6 @@
 #game setting window display
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH = 900
+WINDOW_HEIGHT = 750
 FPS = 60
 
 #colors
