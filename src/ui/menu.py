@@ -1,6 +1,7 @@
 import pygame
 from src.ui.components import Button
 from src.config import *
+from sys import exit
 
 class Menu:
     def __init__(self, game):
@@ -28,7 +29,7 @@ class Menu:
 
     def quit_game(self):
         pygame.quit()
-        quit()
+        exit()
 
     def update(self):
         pass
