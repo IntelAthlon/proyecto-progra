@@ -35,6 +35,7 @@ class Game:
             _ = self.nonogram
         except AttributeError:
             self.nonogram = None
+        self.victory_music_played = False
 
     def load_levels(self):
         levels_path = os.path.join("data/levels/nonogram_levels.json")
@@ -99,6 +100,7 @@ class Game:
             self.timer.start()
         else:
             self.timer.stop()
+            self.sound_manager.stop_music()
 
     def start_new_game(self):
         self.set_screen("level_select")
@@ -107,6 +109,7 @@ class Game:
         print(f"Game: Starting level {level_key}")
         self.def_nono(level_key)
         self.set_screen('game')
+        self.victory_music_played = False
         print(f"Game: Current screen set to 'game'")
 
     def get_hint(self):
@@ -158,9 +161,11 @@ class Game:
         if self.current_screen == 'game':
             self.game_screen.update()
             if self.nonogram and self.nonogram.is_solved():
-                self.sound_manager.play_sound("complete")
+                if not self.victory_music_played:
+                    self.sound_manager.play_sound("complete")
+                    self.victory_music_played = True
                 self.timer.stop()
-                self.progress_tracker.mark_level_complete(2,self.current_level)
+                self.progress_tracker.mark_level_complete(2, self.current_level)
         elif self.current_screen == 'level_select':
             self.level_select_screen.update()
 

@@ -150,4 +150,3 @@ class GameScreen:
 
     def return_to_menu(self):
         self.game.set_screen('menu')
-
