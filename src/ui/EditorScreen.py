@@ -1,6 +1,6 @@
 import pygame
 from pygame import Rect
-from src.ui.components import Button
+from src.ui.Button import Button
 
 class EditorScreen:
     def __init__(self, game):

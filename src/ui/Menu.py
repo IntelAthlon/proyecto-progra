@@ -1,6 +1,6 @@
 import pygame
 import os
-from src.ui.components import Button
+from src.ui.Button import Button
 from src.config import *
 from sys import exit
 

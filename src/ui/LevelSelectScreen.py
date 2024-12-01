@@ -1,7 +1,6 @@
 import pygame
-from prompt_toolkit.shortcuts import button_dialog
 import os
-from src.ui.components import Button
+from src.ui.Button import Button
 from src.config import *
 
 class LevelSelectScreen:
