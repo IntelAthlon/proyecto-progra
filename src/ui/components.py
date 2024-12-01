@@ -3,13 +3,16 @@ from src.config import *
 
 class Button:
     def __init__(self, text, x, y, width, height, callback, sound_manager=None):
-        self.rect = pygame.Rect(x, y, width, height)
         self.text = text
+        self.rect = pygame.Rect(x, y, width, height)
         self.callback = callback
         self.sound_manager = sound_manager
+        self.color = (0, 0, 0)
+        self.text_color = (255, 255, 255)
+        self.font = pygame.font.Font(None, 36)
 
     def draw(self, screen):
-        pygame.draw.rect(screen, GRAY, self.rect)
+        pygame.draw.rect(screen, GRAY, self.rect, border_radius=10)
         font = pygame.font.Font(None, 36)
         text_surface = font.render(self.text, True, BLACK)
         text_rect = text_surface.get_rect(center=self.rect.center)
