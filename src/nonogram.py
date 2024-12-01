@@ -28,27 +28,45 @@ class Nonogram:
         self.draw_clues(screen)
         self.draw_cells(screen)
 
+    def get_max_clue_dimensions(self):
+        font = pygame.font.Font(None, 24)
+
+        max_row_clue_width = max(font.size(" ".join(map(str, row_clue)))[0] for row_clue in self.row_clues) + 25
+
+        max_col_clue_height = max(sum(font.size(str(num))[1] for num in col_clue) for col_clue in self.col_clues) + 25
+
+        return max_row_clue_width, max_col_clue_height
+
     def draw_grid(self, screen):
         screen_width, screen_height = screen.get_size()
         grid_width = self.cols * self.cell_size
         grid_height = self.rows * self.cell_size
+        clue_width, clue_height = self.get_max_clue_dimensions()
         self.grid_offset = (
             (screen_width - grid_width) // 2,
             (screen_height - grid_height) // 2
         )
 
-        grid_rect = pygame.Rect(self.grid_offset[0], self.grid_offset[1], grid_width, grid_height)
+        grid_rect = pygame.Rect(self.grid_offset[0] - clue_width, self.grid_offset[1] - clue_height, grid_width + clue_width, grid_height + clue_height)
         pygame.draw.rect(screen, WHITE, grid_rect)
 
         for i in range(self.rows + 1):
-            start_pos = (self.grid_offset[0], self.grid_offset[1] + i * self.cell_size)
+            start_pos = (self.grid_offset[0] - clue_width, self.grid_offset[1] + i * self.cell_size)
             end_pos = (self.grid_offset[0] + self.cols * self.cell_size, self.grid_offset[1] + i * self.cell_size)
             pygame.draw.line(screen, (0, 0, 0), start_pos, end_pos, 2)
 
         for j in range(self.cols + 1):
-            start_pos = (self.grid_offset[0] + j * self.cell_size, self.grid_offset[1])
+            start_pos = (self.grid_offset[0] + j * self.cell_size, self.grid_offset[1] - clue_height)
             end_pos = (self.grid_offset[0] + j * self.cell_size, self.grid_offset[1] + self.rows * self.cell_size)
             pygame.draw.line(screen, (0, 0, 0), start_pos, end_pos, 2)
+
+        start_pos_x = (self.grid_offset[0] - clue_width, self.grid_offset[1] - clue_height)
+        end_pos_x = (self.grid_offset[0] - clue_width, self.grid_offset[1] + self.rows * self.cell_size)
+        pygame.draw.line(screen, (0, 0, 0), start_pos_x, end_pos_x, 2)
+
+        start_pos_y = (self.grid_offset[0] - clue_width, self.grid_offset[1] - clue_height)
+        end_pos_y = (self.grid_offset[0] + self.cols * self.cell_size, self.grid_offset[1] - clue_height)
+        pygame.draw.line(screen, (0, 0, 0), start_pos_y, end_pos_y, 2)
 
     def draw_clues(self, screen):
         row_clue_surfaces = [
