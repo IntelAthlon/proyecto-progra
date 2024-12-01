@@ -131,13 +131,22 @@ class Game:
             json.dump(self.nonogram.player_grid, f, indent=2)
 
     def load_game(self):
+
+        filename = "data/saved_games/" + str(self.current_level) + ".json"
+        try:
+
         level_key = f"level{self.current_level}"
         filename = f"data/saved_games/{level_key}.json"
         if os.path.exists(filename):
+
             with open(filename, 'r') as f:
                 self.nonogram.player_grid = json.load(f)
                 self.draw()
                 self.update()
+
+        except FileNotFoundError:
+            return
+
         else:
             self.show_message("No hay juego guardado para este nivel.")
 
@@ -156,6 +165,7 @@ class Game:
         self.screen.blit(text_surface, text_rect)
         pygame.display.flip()
         pygame.time.wait(2000)
+
 
     def update(self):
         if self.current_screen == 'game':
