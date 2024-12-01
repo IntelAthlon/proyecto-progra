@@ -123,8 +123,12 @@ class Game:
         level_key = f"level{self.current_level}"
         filename=f"data/saved_games/{level_key}.json"
         os.makedirs(os.path.dirname(filename), exist_ok=True)
+        save_data = {
+            "player_grid": self.nonogram.player_grid,
+            "timer": self.timer.get_time()
+        }
         with open(filename, 'w') as f:
-            json.dump(self.nonogram.player_grid, f, indent=2)
+            json.dump(save_data, f, indent=2)
 
     def load_game(self):
         level_key = f"level{self.current_level}"
@@ -132,7 +136,9 @@ class Game:
         try:
             if os.path.exists(filename):
                 with open(filename, 'r') as f:
-                    self.nonogram.player_grid = json.load(f)
+                    save_data = json.load(f)
+                    self.nonogram.player_grid = save_data["player_grid"]
+                    self.timer.set_time(save_data.get("timer", 0))
                     self.draw()
                     self.update()
             else:
