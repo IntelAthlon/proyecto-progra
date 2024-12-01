@@ -176,7 +176,6 @@ class Game:
             self.level_select_screen.handle_event(event)
 
     def draw(self):
-        self.screen.fill(WHITE)
         if self.current_screen == 'game':
             self.game_screen.draw(self.screen)
         elif self.current_screen == 'level_select':
