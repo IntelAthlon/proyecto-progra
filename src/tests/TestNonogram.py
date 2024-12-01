@@ -1,5 +1,5 @@
 import unittest
-from src.nonogram import Nonogram
+from src.Nonogram import Nonogram
 
 class TestNonogram(unittest.TestCase):
 

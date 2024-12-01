@@ -1,12 +1,11 @@
 import pygame
 import sys
 import os
-from game import Game
-from src.config import *
-from src.ui.level_select_screen import LevelSelectScreen
-from src.ui.menu import Menu
-from src.ui.game_screen import GameScreen
-from src.ui.editor_screen import EditorScreen
+from src.Game import Game
+from src.ui.LevelSelectScreen import LevelSelectScreen
+from src.ui.Menu import Menu
+from src.ui.GameScreen import GameScreen
+from src.ui.EditorScreen import EditorScreen
 
 def main():
     WINDOW_WIDTH = 1200

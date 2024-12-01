@@ -1,5 +1,4 @@
 import pygame
-import json
 import copy
 
 from src.config import WHITE

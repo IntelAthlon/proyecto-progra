@@ -1,19 +1,15 @@
-import itertools
 import pygame
 import json
 import os
 
-from qtconsole.mainwindow import background
-
-from src.logic.progress import ProgressTracker
+from src.logic.ProgressTracker import ProgressTracker
 from src.config import *
-from src.logic.generator import generate_nonogram
-from src.nonogram import Nonogram
+from src.Nonogram import Nonogram
 from src.utils.timer import Timer
-from src.logic.gamepad_handler import GamepadHandler
-from src.logic.sound import SoundManager
-from src.ui.game_screen import GameScreen
-from src.ui.level_select_screen import LevelSelectScreen
+from src.logic.GamepadHandler import GamepadHandler
+from src.logic.SoundManager import SoundManager
+from src.ui.GameScreen import GameScreen
+from src.ui.LevelSelectScreen import LevelSelectScreen
 
 
 

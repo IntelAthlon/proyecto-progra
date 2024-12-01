@@ -1,13 +1,7 @@
-import os
-
 import pygame
 import json
-
-from xarray.backends.common import NONE_VAR_NAME
-
-from src.ui.components import Button
+from src.ui.Button import Button
 from src.config import *
-from src.nonogram import Nonogram
 
 class GameScreen:
     def __init__(self, game):
