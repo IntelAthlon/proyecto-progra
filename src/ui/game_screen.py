@@ -2,6 +2,9 @@ import os
 
 import pygame
 import json
+
+from xarray.backends.common import NONE_VAR_NAME
+
 from src.ui.components import Button
 from src.config import *
 from src.nonogram import Nonogram
@@ -9,6 +12,8 @@ from src.nonogram import Nonogram
 class GameScreen:
     def __init__(self, game):
         self.game = game
+        self.mouse_button = None
+        self.last_cell = None
 
         screen_width, screen_height = pygame.display.get_surface().get_size()
         button_width, button_height = 100, 50
@@ -48,19 +53,31 @@ class GameScreen:
             return
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            x, y = event.pos
-            grid_x = (x - self.game.nonogram.grid_offset[0]) // self.game.nonogram.cell_size
-            grid_y = (y - self.game.nonogram.grid_offset[1]) // self.game.nonogram.cell_size
-            if 0 <= grid_x < self.game.nonogram.cols and 0 <= grid_y < self.game.nonogram.rows:
-                if event.button == 1: #Click Izquierdo
-                    self.game.nonogram.set_cell(grid_y, grid_x, 1)
-                elif event.button == 3: #Click Derecho
-                    self.game.nonogram.set_cell(grid_y, grid_x, 2)
-            self.game.draw()
-            self.game.update()
+            self.mouse_button = event.button
+            self.update_cell(event.pos, event.button)
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self.mouse_button = None
+            self.last_cell = None
+        elif event.type == pygame.MOUSEMOTION and self.mouse_button:
+            self.update_cell(event.pos, self.mouse_button)
 
         for button in self.buttons:
             button.handle_event(event)
+
+    def update_cell(self, pos, button):
+        x, y = pos
+        grid_x = (x - self.game.nonogram.grid_offset[0]) // self.game.nonogram.cell_size
+        grid_y = (y - self.game.nonogram.grid_offset[1]) // self.game.nonogram.cell_size
+        if 0 <= grid_x < self.game.nonogram.cols and 0 <= grid_y < self.game.nonogram.rows:
+            current_cell = (grid_x, grid_y)
+            if current_cell != self.last_cell:
+                if button == 1: #Click Izquierdo
+                    self.game.nonogram.set_cell(grid_y, grid_x, 1)
+                elif button == 3: #Click Derecho
+                    self.game.nonogram.set_cell(grid_y, grid_x, 2)
+                self.last_cell = current_cell
+        self.game.draw()
+        self.game.update()
 
     def update(self):
         if self.game.nonogram is not None and self.game.nonogram.is_solved():
