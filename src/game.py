@@ -2,6 +2,9 @@ import itertools
 import pygame
 import json
 import os
+
+from qtconsole.mainwindow import background
+
 from src.logic.progress import ProgressTracker
 from src.config import *
 from src.logic.generator import generate_nonogram
@@ -32,6 +35,7 @@ class Game:
             _ = self.nonogram
         except AttributeError:
             self.nonogram = None
+        self.victory_music_played = False
 
     def load_levels(self):
         levels_path = os.path.join("data/levels/nonogram_levels.json")
@@ -96,15 +100,16 @@ class Game:
             self.timer.start()
         else:
             self.timer.stop()
+            self.sound_manager.stop_music()
 
     def start_new_game(self):
         self.set_screen("level_select")
 
     def start_level(self, level_key):
         print(f"Game: Starting level {level_key}")
-        #level_data = self.levels.get(level_key)
         self.def_nono(level_key)
         self.set_screen('game')
+        self.victory_music_played = False
         print(f"Game: Current screen set to 'game'")
 
     def get_hint(self):
@@ -119,24 +124,48 @@ class Game:
             self.nonogram.redo()
 
     def save_game(self):
-        filename="data/saved_games/" + str(self.current_level) + ".json"
+        level_key = f"level{self.current_level}"
+        filename=f"data/saved_games/{level_key}.json"
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, 'w') as f:
-            json.dump(self.nonogram.player_grid, f)
+            json.dump(self.nonogram.player_grid, f, indent=2)
 
     def load_game(self):
-        filename = "data/saved_games/" + str(self.current_level) + ".json"
-        with open(filename, 'r') as f:
-            self.nonogram.player_grid = json.load(f)
-            self.draw()
-            self.update()
+        level_key = f"level{self.current_level}"
+        filename = f"data/saved_games/{level_key}.json"
+        if os.path.exists(filename):
+            with open(filename, 'r') as f:
+                self.nonogram.player_grid = json.load(f)
+                self.draw()
+                self.update()
+        else:
+            self.show_message("No hay juego guardado para este nivel.")
+
+    def show_message(self, message):
+        font = pygame.font.Font(None, 36)
+        text_surface = font.render(message, True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=self.screen.get_rect().center)
+
+        background_surface = pygame.Surface((text_rect.width + 20, text_rect.height + 20))
+        background_surface.fill((255, 255, 255))
+        background_rect = background_surface.get_rect(center=self.screen.get_rect().center)
+
+        pygame.draw.rect(self.screen, (0, 0, 0), background_rect, border_radius=12)
+        pygame.draw.rect(self.screen, (255, 255, 255), background_rect.inflate(-6, -6), border_radius=6)
+
+        self.screen.blit(text_surface, text_rect)
+        pygame.display.flip()
+        pygame.time.wait(2000)
 
     def update(self):
         if self.current_screen == 'game':
             self.game_screen.update()
             if self.nonogram and self.nonogram.is_solved():
-                self.sound_manager.play_sound("complete")
+                if not self.victory_music_played:
+                    self.sound_manager.play_sound("complete")
+                    self.victory_music_played = True
                 self.timer.stop()
-                self.progress_tracker.mark_level_complete(2,self.current_level)
+                self.progress_tracker.mark_level_complete(2, self.current_level)
         elif self.current_screen == 'level_select':
             self.level_select_screen.update()
 
@@ -147,7 +176,6 @@ class Game:
             self.level_select_screen.handle_event(event)
 
     def draw(self):
-        self.screen.fill(WHITE)
         if self.current_screen == 'game':
             self.game_screen.draw(self.screen)
         elif self.current_screen == 'level_select':
