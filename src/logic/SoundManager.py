@@ -20,3 +20,9 @@ class SoundManager:
 
     def stop_music(self):
         pygame.mixer.music.stop()
+
+    def pause_music(self):
+        pygame.mixer.music.pause()
+
+    def resume_music(self):
+        pygame.mixer.music.unpause()
