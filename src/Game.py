@@ -135,9 +135,9 @@ class Game:
                     self.nonogram.player_grid = json.load(f)
                     self.draw()
                     self.update()
+            else:
+                self.show_message("No hay juego guardado para este nivel.")
         except FileNotFoundError:
-            return
-        else:
             self.show_message("No hay juego guardado para este nivel.")
 
     def show_message(self, message):
