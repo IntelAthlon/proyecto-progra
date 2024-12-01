@@ -16,6 +16,9 @@ def main():
     pygame.display.set_caption("AtomicGram 1.0")
     clock = pygame.time.Clock()
 
+    background_image = pygame.image.load(os.path.join("assets", "images", "background.jpg"))
+    background_image = pygame.transform.scale(background_image, (WINDOW_WIDTH, WINDOW_HEIGHT))
+
     game = Game(screen)
     #game.run()
     menu = Menu(game)
@@ -41,7 +44,7 @@ def main():
             current_screen.handle_event(event)
 
         current_screen.update()
-        screen.fill((255, 255, 255))
+        screen.blit(background_image, (0, 0))
         current_screen.draw(screen)
         pygame.display.flip()
 

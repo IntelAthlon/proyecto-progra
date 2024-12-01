@@ -99,7 +99,6 @@ class GameScreen:
             return "hard"
 
     def draw(self, screen):
-        screen.fill(WHITE)
         if self.game.nonogram is not None:
             self.game.nonogram.draw_grid(screen)
             self.game.nonogram.draw_cells(screen)

@@ -2,6 +2,9 @@ import pygame
 import json
 import copy
 
+from src.config import WHITE
+
+
 class Nonogram:
     def __init__(self, grid, row_clues, col_clues):
         self.row_clues = row_clues
@@ -34,6 +37,9 @@ class Nonogram:
             (screen_height - grid_height) // 2
         )
 
+        grid_rect = pygame.Rect(self.grid_offset[0], self.grid_offset[1], grid_width, grid_height)
+        pygame.draw.rect(screen, WHITE, grid_rect)
+
         for i in range(self.rows + 1):
             start_pos = (self.grid_offset[0], self.grid_offset[1] + i * self.cell_size)
             end_pos = (self.grid_offset[0] + self.cols * self.cell_size, self.grid_offset[1] + i * self.cell_size)
@@ -49,6 +55,7 @@ class Nonogram:
             (self.font.render(" ".join(map(str, row_clue)), True, (0, 0, 0)), i)
             for i, row_clue in enumerate(self.row_clues)
         ]
+
         for text_surface, i in row_clue_surfaces:
             screen.blit(text_surface, (
                 self.grid_offset[0] - 10 - text_surface.get_width(),

@@ -23,7 +23,6 @@ class Menu:
             button.handle_event(event)
 
     def draw(self, screen):
-        screen.fill(WHITE)
         font = pygame.font.Font(None, 48)
         title = font.render("AtomicGram", True, BLACK)
         title_rect = title.get_rect(center=(screen.get_width() //2, screen.get_height() // 2 - 100))
