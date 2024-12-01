@@ -105,7 +105,6 @@ class Game:
 
     def start_level(self, level_key):
         print(f"Game: Starting level {level_key}")
-        #level_data = self.levels.get(level_key)
         self.def_nono(level_key)
         self.set_screen('game')
         print(f"Game: Current screen set to 'game'")

@@ -10,13 +10,19 @@ class GameScreen:
     def __init__(self, game):
         self.game = game
 
+        screen_width, screen_height = pygame.display.get_surface().get_size()
+        button_width, button_height = 100, 50
+        padding = 20
+        start_x = screen_width - button_width - padding - 20
+        start_y = (screen_height - (6 * button_height + 5 * padding)) // 2
+
         self.buttons = [
-            Button("Hint", 750, 100, BUTTON_WIDTH, BUTTON_HEIGHT, self.get_hint),
-            Button("Undo", 750, 160, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.undo),
-            Button("Redo", 750, 220, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.redo),
-            Button("Save", 750, 280, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.save_game),
-            Button("Load", 750, 340, BUTTON_WIDTH, BUTTON_HEIGHT, self.game.load_game),
-            Button("Menu", 750, 400, BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu)
+            Button("Hint", start_x, start_y, BUTTON_WIDTH, BUTTON_HEIGHT, self.get_hint),
+            Button("Undo", start_x, start_y + (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.undo),
+            Button("Redo", start_x, start_y + 2 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.redo),
+            Button("Save", start_x, start_y + 3 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.save_game),
+            Button("Load", start_x, start_y + 4 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.load_game),
+            Button("Menu", start_x, start_y + 5 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu)
         ]
         self.load_player_progress()
 
@@ -113,7 +119,9 @@ class GameScreen:
         font = pygame.font.Font(None, 36)
         timer_text = f"Time: {self.game.timer.get_time():.1f}s"
         rendered = font.render(timer_text, True, BLACK)
-        screen.blit(rendered, (750, 50))
+        timer_x = screen.get_width() - 150
+        timer_y = self.buttons[0].rect.top - 50
+        screen.blit(rendered, (timer_x, timer_y))
 
     def get_hint(self):
         hint = self.game.get_hint()

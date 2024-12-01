@@ -15,8 +15,9 @@ class LevelSelectScreen:
         button_width, button_height = 50, 50
         padding = 10
         total_width = 10 * (button_width + padding) - padding
+        total_height = ((len(self.game.levels) + 9) // 10) * (button_height + padding) - padding
         start_x = (screen_width - total_width) // 2
-        start_y = 150
+        start_y = (screen_height- total_height) // 2
 
         for i, level_key in enumerate(self.game.levels.keys()):
             row = i // 10
@@ -35,7 +36,7 @@ class LevelSelectScreen:
         screen.fill(WHITE)
         font = pygame.font.Font(None, 48)
         title = font.render("Select Level", True, BLACK)
-        title_rect = title.get_rect(center=(screen.get_width() // 2, 50))
+        title_rect = title.get_rect(center=(screen.get_width() // 2, (screen.get_height() // 2) - 200))
         screen.blit(title, title_rect)
 
         for button in self.buttons:

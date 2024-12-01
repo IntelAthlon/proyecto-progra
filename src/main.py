@@ -9,6 +9,8 @@ from src.ui.game_screen import GameScreen
 from src.ui.editor_screen import EditorScreen
 
 def main():
+    WINDOW_WIDTH = 1200
+    WINDOW_HEIGHT = 900
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption("AtomicGram 1.0")

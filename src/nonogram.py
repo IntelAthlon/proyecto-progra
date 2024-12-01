@@ -30,7 +30,7 @@ class Nonogram:
         grid_width = self.cols * self.cell_size
         grid_height = self.rows * self.cell_size
         self.grid_offset = (
-            (screen_width - grid_width - 300) // 2, # El 300 es el espacio de los botones
+            (screen_width - grid_width) // 2, # El 300 es el espacio de los botones
             (screen_height - grid_height) // 2
         )
 
