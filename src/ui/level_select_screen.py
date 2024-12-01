@@ -1,6 +1,6 @@
 import pygame
 from prompt_toolkit.shortcuts import button_dialog
-
+import os
 from src.ui.components import Button
 from src.config import *
 
@@ -33,9 +33,17 @@ class LevelSelectScreen:
             self.game.set_screen('menu')
 
     def draw(self, screen):
-        font = pygame.font.Font(None, 48)
+        font_path = os.path.join("assets", "fonts", "newsweekly", "newsweekly-Regular.ttf")
+        font_size = 64
+
+        border_font = pygame.font.Font(font_path, font_size)
+        border_title = border_font.render("Select Level", True, WHITE)
+        border_rect = border_title.get_rect(center=((screen.get_width() // 2) + 2, (screen.get_height() // 2) - 198))
+        screen.blit(border_title, border_rect)
+
+        font = pygame.font.Font(font_path, font_size)
         title = font.render("Select Level", True, BLACK)
-        title_rect = title.get_rect(center=(screen.get_width() // 2, (screen.get_height() // 2) - 200))
+        title_rect = title.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 - 200))
         screen.blit(title, title_rect)
 
         for button in self.buttons:
