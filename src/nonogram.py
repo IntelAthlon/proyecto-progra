@@ -26,6 +26,14 @@ class Nonogram:
         self.draw_cells(screen)
 
     def draw_grid(self, screen):
+        screen_width, screen_height = screen.get_size()
+        grid_width = self.cols * self.cell_size
+        grid_height = self.rows * self.cell_size
+        self.grid_offset = (
+            (screen_width - grid_width - 300) // 2, # El 300 es el espacio de los botones
+            (screen_height - grid_height) // 2
+        )
+
         for i in range(self.rows + 1):
             start_pos = (self.grid_offset[0], self.grid_offset[1] + i * self.cell_size)
             end_pos = (self.grid_offset[0] + self.cols * self.cell_size, self.grid_offset[1] + i * self.cell_size)

@@ -93,15 +93,21 @@ class GameScreen:
         for i, row_clue in enumerate(self.game.nonogram.row_clues):
             text = " ".join(map(str, row_clue))
             rendered = font.render(text, True, BLACK)
-            screen.blit(rendered, (GRID_OFFSET[0] - 80, GRID_OFFSET[1] + i * CELL_SIZE + 5))
+            screen.blit(rendered, (
+                self.game.nonogram.grid_offset[0] - 10 - rendered.get_width(),
+                self.game.nonogram.grid_offset[1] + i * self.game.nonogram.cell_size + self.game.nonogram.cell_size //2 - rendered.get_height() // 2
+            ))
 
-        for i, col_clue in enumerate(self.game.nonogram.col_clues):
-            offset_col = 0
-            for j in col_clue:
-                text = str(j)
-                rendered = font.render(text, True, BLACK)
-                screen.blit(rendered, (GRID_OFFSET[0] + i * CELL_SIZE + 5, GRID_OFFSET[1] - 80 + offset_col))
-                offset_col += CELL_SIZE / 2
+        for j, col_clue in enumerate(self.game.nonogram.col_clues):
+            text_surfaces = [font.render(str(num), True, BLACK) for num in col_clue]
+            total_height = sum(surface.get_height() for surface in text_surfaces)
+            current_y = self.game.nonogram.grid_offset[1] - total_height - 10
+            for surface in text_surfaces:
+                screen.blit(surface, (
+                    self.game.nonogram.grid_offset[0] + j * self.game.nonogram.cell_size + self.game.nonogram.cell_size //2 - surface.get_width() //2,
+                    current_y
+                ))
+                current_y += surface.get_height()
 
     def draw_timer(self, screen):
         font = pygame.font.Font(None, 36)
