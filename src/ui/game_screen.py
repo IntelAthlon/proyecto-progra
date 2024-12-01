@@ -42,7 +42,6 @@ class GameScreen:
             json.dump(self.player_progress, f, indent=2)
 
     def handle_event(self, event):
-
         if self.game.nonogram is None:
             print("Error: Nonograma no inicializado.")
             print(f"self.game.nonogram: {self.game.nonogram}")
@@ -53,7 +52,10 @@ class GameScreen:
             grid_x = (x - self.game.nonogram.grid_offset[0]) // self.game.nonogram.cell_size
             grid_y = (y - self.game.nonogram.grid_offset[1]) // self.game.nonogram.cell_size
             if 0 <= grid_x < self.game.nonogram.cols and 0 <= grid_y < self.game.nonogram.rows:
-                self.game.nonogram.toggle_cell(grid_y, grid_x)
+                if event.button == 1: #Click Izquierdo
+                    self.game.nonogram.set_cell(grid_y, grid_x, 1)
+                elif event.button == 3: #Click Derecho
+                    self.game.nonogram.set_cell(grid_y, grid_x, 2)
             self.game.draw()
             self.game.update()
 

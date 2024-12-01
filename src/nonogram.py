@@ -80,10 +80,13 @@ class Nonogram:
                     pygame.draw.line(screen, (255, 0, 0), cell_rect.topleft, cell_rect.bottomright, 2)
                     pygame.draw.line(screen, (255, 0, 0), cell_rect.topright, cell_rect.bottomleft, 2)
 
-    def toggle_cell(self, row, col):
+    def set_cell(self, row, col, value):
         self.history.append((row, col, self.player_grid[row][col]))
-        self.player_grid[row][col] = (self.player_grid[row][col] + 1) % 3
-        self.redo_stack.clear()
+        if self.player_grid[row][col] in {1, 2}:
+            self.player_grid[row][col] = 0
+        else:
+            self.player_grid[row][col] = value
+            self.redo_stack.clear()
 
     def undo(self):
         if self.history:
