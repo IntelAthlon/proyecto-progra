@@ -7,6 +7,7 @@ class Menu:
     def __init__(self, game):
         self.game = game
         screen_width, screen_height = pygame.display.get_surface().get_size()
+        screen = pygame.display.set_mode((screen_width, screen_height))
         button_width, button_height = 225, 50
         self.buttons = [
             Button("Seleccionar nivel", (screen_width-button_width) // 2, 200, button_width, button_height, self.select_level, self.game.sound_manager),
