@@ -131,40 +131,37 @@ class Game:
             json.dump(self.nonogram.player_grid, f, indent=2)
 
     def load_game(self):
-
-        filename = "data/saved_games/" + str(self.current_level) + ".json"
-        try:
-
         level_key = f"level{self.current_level}"
         filename = f"data/saved_games/{level_key}.json"
-        if os.path.exists(filename):
-
-            with open(filename, 'r') as f:
-                self.nonogram.player_grid = json.load(f)
-                self.draw()
-                self.update()
-
+        try:
+            if os.path.exists(filename):
+                with open(filename, 'r') as f:
+                    self.nonogram.player_grid = json.load(f)
+                    self.draw()
+                    self.update()
         except FileNotFoundError:
             return
-
         else:
             self.show_message("No hay juego guardado para este nivel.")
 
     def show_message(self, message):
-        font = pygame.font.Font(None, 36)
-        text_surface = font.render(message, True, (0, 0, 0))
+        font_path = os.path.join("assets", "fonts", "newsweekly", "newsweekly-Regular.ttf")
+        font = pygame.font.Font(font_path, 36)
+        dark_color = (63, 48, 43)
+        light_color = (251, 226, 204)
+        text_surface = font.render(message, True, dark_color)
         text_rect = text_surface.get_rect(center=self.screen.get_rect().center)
+        border_width = 3
 
-        background_surface = pygame.Surface((text_rect.width + 20, text_rect.height + 20))
-        background_surface.fill((255, 255, 255))
+        background_surface = pygame.Surface((text_rect.width + 15, text_rect.height + 40))
         background_rect = background_surface.get_rect(center=self.screen.get_rect().center)
 
-        pygame.draw.rect(self.screen, (0, 0, 0), background_rect, border_radius=12)
-        pygame.draw.rect(self.screen, (255, 255, 255), background_rect.inflate(-6, -6), border_radius=6)
+        pygame.draw.rect(self.screen, dark_color, background_rect.inflate(border_width * 2, border_width * 2), border_radius=10)
+        pygame.draw.rect(self.screen, light_color, background_rect, border_radius=7)
 
         self.screen.blit(text_surface, text_rect)
         pygame.display.flip()
-        pygame.time.wait(2000)
+        pygame.time.wait(1500)
 
 
     def update(self):
