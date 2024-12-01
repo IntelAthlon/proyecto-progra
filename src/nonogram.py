@@ -30,7 +30,7 @@ class Nonogram:
         grid_width = self.cols * self.cell_size
         grid_height = self.rows * self.cell_size
         self.grid_offset = (
-            (screen_width - grid_width) // 2, # El 300 es el espacio de los botones
+            (screen_width - grid_width) // 2,
             (screen_height - grid_height) // 2
         )
 
@@ -45,17 +45,22 @@ class Nonogram:
             pygame.draw.line(screen, (0, 0, 0), start_pos, end_pos, 2)
 
     def draw_clues(self, screen):
-        for i, row_clue in enumerate(self.row_clues):
-            clue_text = " ".join(str(num) for num in row_clue)
-            text_surface = self.font.render(clue_text, True, (0, 0, 0))
+        row_clue_surfaces = [
+            (self.font.render(" ".join(map(str, row_clue)), True, (0, 0, 0)), i)
+            for i, row_clue in enumerate(self.row_clues)
+        ]
+        for text_surface, i in row_clue_surfaces:
             screen.blit(text_surface, (
                 self.grid_offset[0] - 10 - text_surface.get_width(),
                 self.grid_offset[1] + i * self.cell_size + self.cell_size // 2 - text_surface.get_height() // 2
             ))
 
-        for j, col_clue in enumerate(self.col_clues):
-            clue_text = "\n".join(str(num) for num in col_clue)
-            text_surfaces = [self.font.render(str(num), True, (0, 0, 0)) for num in col_clue]
+        col_clue_surfaces = [
+            ([
+                 self.font.render(str(num), True, (0, 0, 0)) for num in col_clue
+             ], j) for j, col_clue in enumerate(self.col_clues)
+        ]
+        for text_surfaces, j in col_clue_surfaces:
             total_height = sum(surface.get_height() for surface in text_surfaces)
             current_y = self.grid_offset[1] - 10 - total_height
             for surface in text_surfaces:
