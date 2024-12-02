@@ -4,12 +4,16 @@ import os
 from src.logic.ProgressTracker import ProgressTracker
 from src.ui.Button import Button
 from src.config import *
+import easygui as eg
 
 class LevelSelectScreen:
     def __init__(self, game):
         self.game = game
         self.buttons = []
         self.create_level_buttons()
+        self.buttons.append(
+            Button("Custom", 100, 100, 200, 100, self.start_custom,
+                   self.game.sound_manager))
 
     def create_level_buttons(self):
         screen_width, screen_height = pygame.display.get_surface().get_size()
@@ -20,7 +24,6 @@ class LevelSelectScreen:
         start_x = (screen_width - total_width) // 2
         start_y = (screen_height- total_height) // 2
         pt=ProgressTracker()
-
         for i, level_key in enumerate(self.game.levels.keys()):
             row = i // 10
             col = i % 10
@@ -61,6 +64,8 @@ class LevelSelectScreen:
 
         for button in self.buttons:
             button.draw(screen)
+    def start_custom(self):
+        self.game.start_level("custom", eg.fileopenbox())
 
     def select_level(self, level_key):
         print(f"Cargando el nivel {level_key}")

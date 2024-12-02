@@ -1,9 +1,9 @@
 import itertools
 from PIL import Image
 import numpy as np
+from pygame.examples.cursors import image
 
-
-def image_to_nonogram(image_path, size = 100, num_colors=2):
+def image_to_nonogram(image_path, size = 20, num_colors=2):
     image = Image.open(image_path).convert('RGB')
     image = image.resize((size, size), Image.Resampling.LANCZOS)
     image_array = np.array(image)
@@ -20,15 +20,15 @@ def image_to_nonogram(image_path, size = 100, num_colors=2):
         count = 0
         for pixel in row:
             if pixel != current_color:
-                if current_color is not None:
-                    clues.append((current_color, count))
+                if current_color==1:
+                    clues.append(count)
                 current_color = pixel
                 count = 1
             else:
                 count += 1
-        if current_color is not None:
-            clues.append((current_color, count))
-        row_clues.append(clues if clues else [(0, 0)])
+        if current_color==1:
+            clues.append(count)
+        row_clues.append(clues if clues else [0])
 
     for col in image_quantized.T:
         clues = []
@@ -36,14 +36,15 @@ def image_to_nonogram(image_path, size = 100, num_colors=2):
         count = 0
         for pixel in col:
             if pixel != current_color:
-                if current_color is not None:
-                    clues.append((current_color, count))
+                if current_color==1:
+                    clues.append(count)
                 current_color = pixel
                 count = 1
             else:
                 count += 1
-        if current_color is not None:
-            clues.append((current_color, count))
-        col_clues.append(clues if clues else [(0, 0)])
+        if current_color==1:
+            clues.append(count)
+        col_clues.append(clues if clues else [0])
 
-    return image_quantized.tolist(), row_clues, col_clues
+    return [image_quantized.tolist(), row_clues, col_clues]
+
