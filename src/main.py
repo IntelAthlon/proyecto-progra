@@ -53,8 +53,8 @@ def main():
 
                 console_controller_x += x_axis * mouse_speed
                 console_controller_y += y_axis * mouse_speed
-                mouse_x = max(0, min(console_controller_x))
-                mouse_y = max(0, min(console_controller_y))
+                mouse_x = max(0, min(console_controller_x,WINDOW_WIDTH))
+                mouse_y = max(0, min(console_controller_y,WINDOW_WIDTH))
                 pygame.mouse.set_pos(mouse_x, mouse_y)
             current_screen.handle_event(event)
 
