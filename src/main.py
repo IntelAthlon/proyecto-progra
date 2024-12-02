@@ -1,18 +1,22 @@
 import pygame
 import sys
 import os
-from game import Game
-from src.config import *
-from src.ui.level_select_screen import LevelSelectScreen
-from src.ui.menu import Menu
-from src.ui.game_screen import GameScreen
-from src.ui.editor_screen import EditorScreen
+from src.Game import Game
+from src.ui.LevelSelectScreen import LevelSelectScreen
+from src.ui.Menu import Menu
+from src.ui.GameScreen import GameScreen
+from src.ui.EditorScreen import EditorScreen
 
 def main():
+    WINDOW_WIDTH = 1200
+    WINDOW_HEIGHT = 900
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption("AtomicGram 1.0")
     clock = pygame.time.Clock()
+
+    background_image = pygame.image.load(os.path.join("assets", "images", "background.jpg"))
+    background_image = pygame.transform.scale(background_image, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
     game = Game(screen)
     #game.run()
@@ -39,7 +43,7 @@ def main():
             current_screen.handle_event(event)
 
         current_screen.update()
-        screen.fill((255, 255, 255))
+        screen.blit(background_image, (0, 0))
         current_screen.draw(screen)
         pygame.display.flip()
 
