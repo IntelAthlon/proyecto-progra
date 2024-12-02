@@ -16,12 +16,12 @@ class GameScreen:
         start_y = (screen_height - (6 * button_height + 5 * padding)) // 2
 
         self.buttons = [
-            Button("Hint", start_x, start_y + (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.get_hint),
-            Button("Undo", start_x, start_y + 2 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.undo),
-            Button("Redo", start_x, start_y + 3 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.redo),
-            Button("Save", start_x, start_y + 4 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.save_game),
-            Button("Load", start_x, start_y + 5 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.load_game),
-            Button("Menu", start_x, start_y + 6 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu)
+            Button("Hint", start_x, start_y, BUTTON_WIDTH, BUTTON_HEIGHT, self.get_hint, self.game.sound_manager),
+            Button("Undo", start_x, start_y + (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.undo, self.game.sound_manager),
+            Button("Redo", start_x, start_y + 2 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.redo, self.game.sound_manager),
+            Button("Save", start_x, start_y + 3 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.save_game, self.game.sound_manager),
+            Button("Load", start_x, start_y + 4 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.load_game, self.game.sound_manager),
+            Button("Menu", start_x, start_y + 5 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu, self.game.sound_manager)
         ]
         self.load_player_progress()
 
