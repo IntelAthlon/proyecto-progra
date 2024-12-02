@@ -16,12 +16,12 @@ class GameScreen:
         start_y = (screen_height - (6 * button_height + 5 * padding)) // 2
 
         self.buttons = [
-            Button("Hint", start_x, start_y, BUTTON_WIDTH, BUTTON_HEIGHT, self.get_hint),
-            Button("Undo", start_x, start_y + (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.undo),
-            Button("Redo", start_x, start_y + 2 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.redo),
-            Button("Save", start_x, start_y + 3 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.save_game),
-            Button("Load", start_x, start_y + 4 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.load_game),
-            Button("Menu", start_x, start_y + 5 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu)
+            Button("Hint", start_x, start_y + (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.get_hint),
+            Button("Undo", start_x, start_y + 2 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.undo),
+            Button("Redo", start_x, start_y + 3 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.redo),
+            Button("Save", start_x, start_y + 4 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.save_game),
+            Button("Load", start_x, start_y + 5 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.game.load_game),
+            Button("Menu", start_x, start_y + 6 * (button_height + padding), BUTTON_WIDTH, BUTTON_HEIGHT, self.return_to_menu)
         ]
         self.load_player_progress()
 
@@ -79,15 +79,16 @@ class GameScreen:
 
 
     def update_player_progress(self):
-        level_key = f"level{self.game.current_level}"
+        level_key = self.game.current_level
         difficulty = self.get_level_difficulty()
         self.player_progress[difficulty][level_key] = True
         self.save_player_progress()
 
     def get_level_difficulty(self):
-        if 1 <= 20: #self.game.current_level
+        s = int(''.join(x for x in self.game.current_level if x.isdigit()))
+        if s <= 20:
             return "easy"
-        elif 1 <= 40: #self.game.current_level
+        elif s <= 40:
             return "medium"
         else:
             return "hard"

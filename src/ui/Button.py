@@ -2,13 +2,18 @@ import pygame
 import os
 
 class Button:
-    def __init__(self, text, x, y, width, height, callback, sound_manager=None):
+    def __init__(self, text, x, y, width, height, callback, sound_manager=None, type=0):
         self.text = text
         self.rect = pygame.Rect(x, y, width, height)
         self.callback = callback
         self.sound_manager = sound_manager
-        self.color = (251, 226, 204)
-        self.text_color = (63, 48, 43)
+        self.type = type
+        if type == 1:
+            self.color = (63, 48, 43)
+            self.text_color = (251, 226, 204)
+        else:
+            self.color = (251, 226, 204)
+            self.text_color = (63, 48, 43)
         self.border_color = (63, 48, 43)
         self.border_width = 3
         font_path = os.path.join("assets", "fonts", "newsweekly", "newsweekly-Regular.ttf")
