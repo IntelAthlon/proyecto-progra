@@ -5,12 +5,12 @@ import os
 from src.logic.ProgressTracker import ProgressTracker
 from src.config import *
 from src.Nonogram import Nonogram
+from src.utils.image_converter import image_to_nonogram
 from src.utils.timer import Timer
 from src.logic.GamepadHandler import GamepadHandler
 from src.logic.SoundManager import SoundManager
 from src.ui.GameScreen import GameScreen
 from src.ui.LevelSelectScreen import LevelSelectScreen
-
 
 
 class Game:
@@ -64,30 +64,29 @@ class Game:
             print(f"Unexpected error loading {level_key}: {str(e)}")
             return None
 
-    def def_nono(self, level_key):
-        level_data = self.load_level_data(level_key)
-        if level_data and all(key in level_data for key in ["grid", "row_clues", "col_clues"]):
-            print(f"Inicializando Nonograma del nivel {level_key}")
-            print(f"Grilla: {level_data['grid']}")
-            print(f"Pistas por fila: {level_data['row_clues']}")
-            print(f"Pistas por columna: {level_data['col_clues']}")
-            try:
-                self.nonogram = Nonogram(
-                    level_data["grid"],
-                    level_data["row_clues"],
-                    level_data["col_clues"]
-                )
-                print(f"Nonograma de nivel {level_key} inicializado con éxito.")
-                print(self.nonogram)
-                self.current_level = level_key
-            except Exception as e:
-                print(f"Error inicializando Nonograma: {str(e)}")
+    def def_nono(self, level_key, custom):
+        if custom is not None:
+            a = image_to_nonogram(custom)
+            self.nonogram = Nonogram(a[0], a[1], a[2])
+            self.current_level = "custom"
         else:
-            print(f"Error: Información del nivel {level_key} incompleta o inválida.")
-            if level_data:
-                print(f"Se encontraron las claves: {level_data.keys()}")
+            level_data = self.load_level_data(level_key)
+            if level_data and all(key in level_data for key in ["grid", "row_clues", "col_clues"]):
+                print(f"Inicializando Nonograma del nivel {level_key}")
+                print(f"Pistas por fila: {level_data['row_clues']}")
+                print(f"Pistas por columna: {level_data['col_clues']}")
+                try:
+                    self.nonogram = Nonogram(level_data['grid'],level_data['row_clues'],level_data['col_clues'])
+                    print(f"Nonograma de nivel {level_key} inicializado con éxito.")
+                    self.current_level = level_key
+                except Exception as e:
+                    print(f"Error inicializando Nonograma: {str(e)}")
             else:
-                print("No se cargó información.")
+                print(f"Error: Información del nivel {level_key} incompleta o inválida.")
+                if level_data:
+                    print(f"Se encontraron las claves: {level_data.keys()}")
+                else:
+                    print("No se cargó información.")
 
 
     def set_screen(self, screen_name):
@@ -101,9 +100,9 @@ class Game:
     def start_new_game(self):
         self.set_screen("level_select")
 
-    def start_level(self, level_key):
+    def start_level(self, level_key, custom=None):
         print(f"Game: Starting level {level_key}")
-        self.def_nono(level_key)
+        self.def_nono(level_key, custom)
         self.set_screen('game')
         self.victory_music_played = False
         print(f"Game: Current screen set to 'game'")

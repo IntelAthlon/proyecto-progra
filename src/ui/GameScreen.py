@@ -86,15 +86,18 @@ class GameScreen:
 
 
     def update_player_progress(self):
-        level_key = f"level{self.game.current_level}"
+        level_key = self.game.current_level
+        if level_key == "custom":
+            return
         difficulty = self.get_level_difficulty()
         self.player_progress[difficulty][level_key] = True
         self.save_player_progress()
 
     def get_level_difficulty(self):
-        if 1 <= 20: #self.game.current_level
+        s = int(''.join(x for x in self.game.current_level if x.isdigit()))
+        if s <= 20:
             return "easy"
-        elif 1 <= 40: #self.game.current_level
+        elif s <= 40:
             return "medium"
         else:
             return "hard"
