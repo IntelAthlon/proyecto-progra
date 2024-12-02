@@ -2,8 +2,8 @@ import json
 import os
 
 class ProgressTracker:
-    def __init__(self):
-        self.progress_file = "data/player_progress.json"
+    def __init__(self, progress_file="data/player_progress.json"):
+        self.progress_file = progress_file
         self.progress = self.load_progress()
 
     def load_progress(self):
@@ -27,4 +27,4 @@ class ProgressTracker:
 
     def get_category_progress(self, category):
         category_progress = self.progress.get(category, {})
-        return sum(category_progress.values()), len(category_progress)
+        return len(category_progress)
