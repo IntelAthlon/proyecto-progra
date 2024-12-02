@@ -13,9 +13,11 @@ class Button:
         self.border_width = 3
         font_path = os.path.join("assets", "fonts", "newsweekly", "newsweekly-Regular.ttf")
         self.font = pygame.font.Font(font_path, 36)
-
-        self.joystick = pygame.joystick.Joystick(0)
-        self.joystick.init()
+        self.joystick_connected = False
+        if pygame.joystick.get_count() > 0:
+            self.joystick = pygame.joystick.Joystick(0)
+            self.joystick.init()
+            self.joystick_connected = True
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.border_color, self.rect.inflate(self.border_width * 2, self.border_width * 2), border_radius=10)
@@ -25,7 +27,7 @@ class Button:
         screen.blit(text_surface, text_rect)
 
     def handle_event(self, event):
-        if event.type == pygame.JOYBUTTONDOWN and self.joystick.get_button(0):
+        if self.joystick_connected and event.type == pygame.JOYBUTTONDOWN and self.joystick.get_button(0):
             mouse_pos = pygame.mouse.get_pos()
             if self.rect.collidepoint(mouse_pos):
                 if self.sound_manager:

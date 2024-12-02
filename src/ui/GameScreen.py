@@ -8,8 +8,11 @@ class GameScreen:
         self.game = game
         self.mouse_button = None
         self.last_cell = None
-        self.joystick = pygame.joystick.Joystick(0)
-        self.joystick.init()
+        self.joystick_connected = False
+        if pygame.joystick.get_count() > 0:
+            self.joystick = pygame.joystick.Joystick(0)
+            self.joystick.init()
+            self.joystick_connected = True
         screen_width, screen_height = pygame.display.get_surface().get_size()
         button_width, button_height = 100, 50
         padding = 20
@@ -46,7 +49,7 @@ class GameScreen:
             print("Error: Nonograma no inicializado.")
             print(f"self.game.nonogram: {self.game.nonogram}")
             return
-        if event.type == pygame.JOYBUTTONDOWN:
+        if self.joystick_connected and event.type == pygame.JOYBUTTONDOWN:
             self.joystick = event.button
             mouse_pos = pygame.mouse.get_pos()
             self.update_cell(mouse_pos, event.button)

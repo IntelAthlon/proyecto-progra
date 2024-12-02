@@ -32,8 +32,11 @@ def main():
         "level_select": level_select_screen
 
     }
-    joystick = pygame.joystick.Joystick(0)
-    joystick.init()
+    joystick_connected = False
+    if pygame.joystick.get_count() > 0:
+        joystick = pygame.joystick.Joystick(0)
+        joystick.init()
+        joystick_connected = True
     mouse_speed = 5
     console_controller_x, console_controller_y = pygame.mouse.get_pos()
 
@@ -45,7 +48,7 @@ def main():
                 pygame.quit()
                 sys.exit()
             #Parte del mando
-            if event.type == pygame.JOYAXISMOTION:
+            if joystick_connected and event.type == pygame.JOYAXISMOTION:
                 #Derecha o izquierda
                 x_axis = joystick.get_axis(0)
                 #Arriba o abajo
