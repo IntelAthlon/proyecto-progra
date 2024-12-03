@@ -5,7 +5,7 @@ from src.ui.Button import Button
 class EditorScreen:
     def __init__(self, game):
         self.game = game
-        self.grid_size = (10, 10)
+        self.grid_size = (20, 20)
         self.cell_size = 30
         self.grid_offset = (100, 100)
         self.grid = [[0 for _ in range(self.grid_size[1])] for _ in range(self.grid_size[0])]
