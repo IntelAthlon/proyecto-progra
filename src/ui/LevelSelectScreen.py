@@ -65,7 +65,10 @@ class LevelSelectScreen:
         for button in self.buttons:
             button.draw(screen)
     def start_custom(self):
-        self.game.start_level("custom", eg.fileopenbox())
+        path=eg.fileopenbox()
+        if path is None:
+            return
+        self.game.start_level("custom", path)
 
     def select_level(self, level_key):
         print(f"Cargando el nivel {level_key}")

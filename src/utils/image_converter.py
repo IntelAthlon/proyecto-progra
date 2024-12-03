@@ -4,12 +4,28 @@ import numpy as np
 from pygame.examples.cursors import image
 
 def image_to_nonogram(image_path, size = 20, num_colors=2):
+    image = Image.open(image_path)
+    img_alpha = False
+    if image.has_transparency_data:
+        img_alpha = True
+    image = Image.open(image_path).convert('L')
+    pixels = image.getdata()
+    black_thresh = 50
+    nblack = 0
+    for pixel in pixels:
+        if pixel < black_thresh:
+            nblack += 1
+    n = len(pixels)
+
     image = Image.open(image_path).convert('RGB')
     image = image.resize((size, size), Image.Resampling.LANCZOS)
-    image_array = np.array(image)
 
     image_quantized = image.convert('P', palette=Image.ADAPTIVE, colors=num_colors)
     image_quantized = np.array(image_quantized)
+
+    if (nblack / float(n)) > 0.5 or img_alpha:
+        image_quantized = np.logical_not(image_quantized).astype(int)
+
 
     row_clues = []
     col_clues = []
