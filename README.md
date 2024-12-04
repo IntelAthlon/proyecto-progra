@@ -8,7 +8,7 @@ Integrantes:
 
 -Luis Ignacio Martinez Neira
 
--Mario Andres Salgado JaqueMario Andres Salgado Jaque
+-Mario Andres Salgado Jaque
 
 -Santiago Alexander Diaz Barra
 
