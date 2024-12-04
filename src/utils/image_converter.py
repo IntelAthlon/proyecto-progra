@@ -4,6 +4,17 @@ import numpy as np
 from pygame.examples.cursors import image
 
 def image_to_nonogram(image_path, size = 20, num_colors=2):
+    """
+    Convierte una imagen en un Nonograma.
+
+    Args:
+        image_path (str): Ruta a la imagen a convertir.
+        size (int, optional): Tamaño de la cuadrícula del Nonogram. Por defecto es 20.
+        num_colors (int, optional): Número de colores para la cuantización de la imagen. Por defecto es 2 (blanco y negro).
+
+    Returns:
+        list: Una lista que contiene la cuadrícula del Nonogram, las pistas de las filas y las pistas de las columnas.
+    """
     image = Image.open(image_path)
     img_alpha = False
     if image.has_transparency_data:

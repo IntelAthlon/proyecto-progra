@@ -3,9 +3,33 @@ import copy
 
 from src.config import WHITE
 
-
 class Nonogram:
+    """
+    Clase que representa los atributos, filas, columnas y grilla lógica del nonograma.
+
+    Atributos:
+        row_clues (list): Pistas para las filas.
+        col_clues (list): Pistas para las columnas.
+        grid (list): La cuadrícula de solución del Nonogram.
+        rows (int): Número de filas en la cuadrícula.
+        cols (int): Número de columnas en la cuadrícula.
+        player_grid (list): La cuadrícula del jugador.
+        cell_size (int): Tamaño de cada celda en píxeles.
+        grid_offset (tuple): Desplazamiento de la cuadrícula en la pantalla.
+        font (pygame.font.Font): Fuente utilizada para dibujar texto.
+        history (list): Historial de movimientos para deshacer.
+        redo_stack (list): Pila de movimientos para rehacer.
+    """
+
     def __init__(self, grid, row_clues, col_clues):
+        """
+        Inicializa una instancia de la clase Nonogram.
+
+        Args:
+            grid (list): La cuadrícula de solución del Nonogram.
+            row_clues (list): Pistas para las filas.
+            col_clues (list): Pistas para las columnas.
+        """
         self.row_clues = row_clues
         self.col_clues = col_clues
         self.grid = grid
@@ -20,23 +44,47 @@ class Nonogram:
 
     @classmethod
     def from_level_data(cls, level_data):
+        """
+        Crea una instancia de Nonogram a partir de datos de nivel.
+
+        Args:
+            level_data (dict): Diccionario con los datos del nivel.
+
+        Returns:
+            Nonogram: Una instancia de la clase Nonogram.
+        """
         return cls(level_data['grid'], level_data['row_clues'], level_data['col_clues'])
 
     def draw(self, screen):
+        """
+        Dibuja el Nonogram en la pantalla.
+
+        Args:
+            screen (pygame.Surface): La superficie de la pantalla donde se dibuja el Nonogram.
+        """
         self.draw_grid(screen)
         self.draw_clues(screen)
         self.draw_cells(screen)
 
     def get_max_clue_dimensions(self):
+        """
+        Obtiene las dimensiones máximas de las pistas.
+
+        Returns:
+            tuple: Ancho máximo de las pistas de las filas y alto máximo de las pistas de las columnas.
+        """
         font = pygame.font.Font(None, 24)
-
         max_row_clue_width = max(font.size(" ".join(map(str, row_clue)))[0] for row_clue in self.row_clues) + 25
-
         max_col_clue_height = max(sum(font.size(str(num))[1] for num in col_clue) for col_clue in self.col_clues) + 25
-
         return max_row_clue_width, max_col_clue_height
 
     def draw_grid(self, screen):
+        """
+        Dibuja la cuadrícula del Nonogram en la pantalla.
+
+        Args:
+            screen (pygame.Surface): La superficie de la pantalla donde se dibuja la cuadrícula.
+        """
         screen_width, screen_height = screen.get_size()
         grid_width = self.cols * self.cell_size
         grid_height = self.rows * self.cell_size
@@ -68,6 +116,12 @@ class Nonogram:
         pygame.draw.line(screen, (0, 0, 0), start_pos_y, end_pos_y, 2)
 
     def draw_clues(self, screen):
+        """
+        Dibuja las pistas del Nonogram en la pantalla.
+
+        Args:
+            screen (pygame.Surface): La superficie de la pantalla donde se dibujan las pistas.
+        """
         row_clue_surfaces = [
             (self.font.render(" ".join(map(str, row_clue)), True, (0, 0, 0)), i)
             for i, row_clue in enumerate(self.row_clues)
@@ -95,6 +149,12 @@ class Nonogram:
                 current_y += surface.get_height()
 
     def draw_cells(self, screen):
+        """
+        Dibuja las celdas del Nonogram en la pantalla.
+
+        Args:
+            screen (pygame.Surface): La superficie de la pantalla donde se dibujan las celdas.
+        """
         for i in range(self.rows):
             for j in range(self.cols):
                 cell_rect = pygame.Rect(
@@ -110,6 +170,14 @@ class Nonogram:
                     pygame.draw.line(screen, (255, 0, 0), cell_rect.topright, cell_rect.bottomleft, 2)
 
     def set_cell(self, row, col, value):
+        """
+        Establece el valor de una celda en la cuadrícula del jugador.
+
+        Args:
+            row (int): Índice de la fila.
+            col (int): Índice de la columna.
+            value (int): Valor a establecer en la celda.
+        """
         self.history.append((row, col, self.player_grid[row][col]))
         if self.player_grid[row][col] in {1, 2}:
             self.player_grid[row][col] = 0
@@ -118,18 +186,30 @@ class Nonogram:
             self.redo_stack.clear()
 
     def undo(self):
+        """
+        Deshace el último movimiento realizado por el jugador.
+        """
         if self.history:
             row, col, previous_state = self.history.pop()
             self.redo_stack.append((row, col, self.player_grid[row][col]))
             self.player_grid[row][col] = previous_state
 
     def redo(self):
+        """
+        Rehace el último movimiento deshecho por el jugador.
+        """
         if self.redo_stack:
             row, col, next_state = self.redo_stack.pop()
             self.history.append((row, col, self.player_grid[row][col]))
             self.player_grid[row][col] = next_state
 
     def is_solved(self):
+        """
+        Verifica si el Nonogram ha sido resuelto correctamente.
+
+        Returns:
+            bool: True si el Nonogram está resuelto, False en caso contrario.
+        """
         playergrid_copy = copy.deepcopy(self.player_grid)
 
         for l in range(self.rows):
@@ -139,6 +219,12 @@ class Nonogram:
         return playergrid_copy == self.grid
 
     def get_hint(self):
+        """
+        Proporciona una pista al jugador, indicando una celda que no coincide con la solución.
+
+        Returns:
+            tuple: Una tupla (fila, columna, valor) indicando la celda y el valor correcto, o None si no hay discrepancias.
+        """
         for row in range(self.rows):
             for col in range(self.cols):
                 if self.player_grid[row][col] != self.grid[row][col]:
@@ -147,6 +233,15 @@ class Nonogram:
 
     @staticmethod
     def get_row_clue(row):
+        """
+        Genera las pistas para una fila dada.
+
+        Args:
+            row (list): Una lista representando una fila de la cuadrícula.
+
+        Returns:
+            list: Una lista de enteros representando las pistas para la fila.
+        """
         clue = []
         count = 0
         for cell in row:
